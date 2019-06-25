@@ -17,7 +17,8 @@ namespace Tesis_Algoritmo_Genetico
             float numero;
             do
             {
-                numero = (float)(r.Next(0, 101)) / 100;
+                float
+                numero = (float)(r.Next(1, 101)) / 10;
                 Console.WriteLine("Numero float aleatorio: "+numero);
                 
                 //Console.WriteLine("Press any key to exit.");
