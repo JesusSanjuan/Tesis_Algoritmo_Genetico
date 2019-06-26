@@ -19,11 +19,13 @@ namespace Tesis_Algoritmo_Genetico
                 byte[] bytes = new byte[5];
                 rand.NextBytes(bytes);
                 Double numeroaleatorio = rand.NextDouble() * 100;
-                numeroaleatorio = Math.Round(numeroaleatorio, 3);
+                numeroaleatorio = Math.Round(numeroaleatorio, 2);
+                int count = BitConverter.GetBytes(decimal.GetBits((decimal)numeroaleatorio)[3])[2];
                 string str = numeroaleatorio.ToString();
                 Console.Write("Numero alearotio en decimal {0:G} \n", numeroaleatorio);
                 List<string> resultados = new List<string>();
-                resultados=dividircadena(str,4);
+                
+                resultados =dividircadena(str,count+1);
                 String primerconversion = convertirbinario(resultados[0]);
                 String segundaconversion = convertirbinariodecimal(resultados[1]);
                 String numerocompletobinario = primerconversion + "." + segundaconversion;
@@ -91,7 +93,7 @@ namespace Tesis_Algoritmo_Genetico
                 salida = Convert.ToDouble(resultados[1]);
                 valfloat = Convert.ToDouble(resultados[1]) * 2;
                 contador++;
-                if(contador==6)
+                if(contador==8)
                 {
                     break;
                 }
