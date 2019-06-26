@@ -16,14 +16,14 @@ namespace Tesis_Algoritmo_Genetico
             do
             {
                 Random rand = new Random();
-                // Generate and display 5 random byte (integer) values.
                 byte[] bytes = new byte[5];
                 rand.NextBytes(bytes);
-                Double numeroaleatorio = rand.NextDouble() * 200;
+                Double numeroaleatorio = rand.NextDouble() * 100;
+                numeroaleatorio = Math.Round(numeroaleatorio, 3);
                 string str = numeroaleatorio.ToString();
-                Console.Write("Numero alearotio en decimal {0,8:N3} \n", numeroaleatorio);
+                Console.Write("Numero alearotio en decimal {0:G} \n", numeroaleatorio);
                 List<string> resultados = new List<string>();
-                resultados=dividircadena(str,5);
+                resultados=dividircadena(str,4);
                 String primerconversion = convertirbinario(resultados[0]);
                 String segundaconversion = convertirbinariodecimal(resultados[1]);
                 String numerocompletobinario = primerconversion + "." + segundaconversion;
@@ -91,7 +91,7 @@ namespace Tesis_Algoritmo_Genetico
                 salida = Convert.ToDouble(resultados[1]);
                 valfloat = Convert.ToDouble(resultados[1]) * 2;
                 contador++;
-                if(contador==5)
+                if(contador==6)
                 {
                     break;
                 }
