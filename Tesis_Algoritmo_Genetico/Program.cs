@@ -13,18 +13,21 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            Random r= new Random();
-            float numero;
-            do
-            {
-                float
-                numero = (float)(r.Next(1, 101)) / 10;
-                Console.WriteLine("Numero float aleatorio: "+numero);
-                
-                //Console.WriteLine("Press any key to exit.");
+            
+
+
+           // do
+           // {
+                Random rand = new Random();
+                // Generate and display 5 random byte (integer) values.
+                byte[] bytes = new byte[5];
+                rand.NextBytes(bytes);
+                Console.WriteLine("Five Doubles between 0 and 5.");
+                for (int ctr = 0; ctr <= 4; ctr++)
+                    Console.Write("{0,8:N3}", rand.NextDouble() * 1000);
                 Console.ReadKey();
 
-            } while (true);
+           // } while (true);
         }
     }
 }
