@@ -25,7 +25,6 @@ namespace Tesis_Algoritmo_Genetico
             vpn = Console.ReadLine();
 
             double[] FNE = new double[Convert.ToInt32(per)];
-            Console.WriteLine("Introduzca los FNE: ");
             for(int x=0; x<Convert.ToInt32(per);x++)
             {
                 Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
@@ -36,9 +35,8 @@ namespace Tesis_Algoritmo_Genetico
             periodo = Convert.ToDouble(per);
             VS = Convert.ToDouble(vss);
             VPN = Convert.ToDouble(vpn);
+            Console.ReadKey();
         }
-
-
 
         public static decimal CalcularTIR(decimal ValorTIR, int caso, decimal inversion, decimal[] FNE, decimal VdS, int n)
         {
