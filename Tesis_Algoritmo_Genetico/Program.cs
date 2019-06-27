@@ -13,99 +13,108 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Introduzca la cantidad de la problacion: ");
-            String poblacionNumero;
-            poblacionNumero = Console.ReadLine();
-            List<float> poblacion = new List<float>();
-            List<String> poblacionBinaria = new List<String>();
-            Random rand = new Random();
-            for (int p = 0; p < Int32.Parse(poblacionNumero); p++)
-            {
+            String inve, per, vss,vpn;
+            double inversion, periodo, VS, VPN;
+            Console.WriteLine("Introduzca la inversion (P): ");
+            inve = Console.ReadLine();
+            Console.WriteLine("Introduzca el perdio (N): ");
+            per= Console.ReadLine();
+            Console.WriteLine("Introduzca la valor de salvamento: ");
+            vss = Console.ReadLine();
+            Console.WriteLine("Introduzca el VPN posible: ");
+            vpn = Console.ReadLine();
 
-                String entero = "";
-                String flotante = "";
-                for (int x = 0; x < 18; x++)
-                {
-                    int value = rand.Next(0, 2);
-                    if (x < 9)
+            double[] FNE = new double[Convert.ToInt32(per)];
+            Console.WriteLine("Introduzca los FNE: ");
+            for(int x=0; x<Convert.ToInt32(per);x++)
+            {
+                Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
+                String temporal= Console.ReadLine();
+                FNE[x] = Convert.ToDouble(temporal);
+            }
+            inversion = Convert.ToDouble(inve);
+            periodo = Convert.ToDouble(per);
+            VS = Convert.ToDouble(vss);
+            VPN = Convert.ToDouble(vpn);
+        }
+
+
+
+        public static decimal CalcularTIR(decimal ValorTIR, int caso, decimal inversion, decimal[] FNE, decimal VdS, int n)
+        {
+            decimal TasaIncDec = 0.01M;
+            decimal Resultado;
+            Boolean MenosCero = false;
+            decimal ValorTIRR = ValorTIR + TasaIncDec;
+            switch (caso)
+            {
+                case 1:
+                    do
                     {
-                        entero = entero + value;
-                    }
-                    else
+                        Resultado = CalcularVPN(inversion, FNE, VdS, ValorTIRR, n);//Cabie aqui tenia hasta 10
+                        if (MenosCero == true)
+                        {
+                            TasaIncDec = TasaIncDec / 2;
+                            MenosCero = false;
+                        }
+                        if (Resultado > 0)
+                        {
+                            ValorTIRR = Math.Round(ValorTIRR + TasaIncDec, 10);
+                        }
+                        else
+                        {
+                            ValorTIRR = Math.Round(ValorTIRR - TasaIncDec, 10);
+                            MenosCero = true;
+                        }
+
+                    } while (Math.Abs(Resultado) >= 0.01M);
+                    break;
+                case 2:
+                    do
                     {
-                        flotante = flotante + value;
-                    }
-                }
-                poblacionBinaria.Add(entero + "." + flotante);
-                int enterooo = BinarioADecimal(entero);
-                float partedecimal = BinarioADecimalFlotante(flotante);
-                float resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
-                poblacion.Add(resultado);
+                        Resultado = CalcularVPN(inversion, FNE, VdS, ValorTIRR, n);
+                        if (MenosCero == true)
+                        {
+                            TasaIncDec = TasaIncDec / 2;
+                            MenosCero = false;
+                        }
+                        if (Resultado > 0)
+                        {
+                            ValorTIRR = ValorTIRR + TasaIncDec;
+                            MenosCero = true;
+                        }
+                        else
+                        {
+                            ValorTIRR = ValorTIRR - TasaIncDec;
+
+                        }
+                    } while (Math.Abs(Resultado) >= 0.01M);
+                    break;
             }
-            Console.WriteLine("Imprimiendo Poblacion binaria:");
-            foreach (string contenido in poblacionBinaria)
-            {
-                Console.WriteLine("{0}", contenido);
-            }
-            Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo Poblacion en decimal:");
-            foreach (float contenido in poblacion)
-            {
-                Console.WriteLine("{0}", contenido.ToString());
-            }
-            Console.WriteLine("____________________________\n");
-            Console.ReadKey();
+            return ValorTIRR;
         }
 
-        static int BinarioADecimal(String input)
+        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
-            char[] array = input.ToCharArray();
-            Array.Reverse(array);
-            int sum = 0;
-            for (int i = 0; i < array.Length; i++)
+            decimal FNEAcumulado = 0, fVPN = 0;
+            int i = 0;
+            try
             {
-                if (array[i] == '1')
+                decimal DivTMAR = 1M + TMAR;
+                for (i = 1; i < Periodo; i++)
                 {
-                    sum += (int)Math.Pow(2, i);
+                    decimal valorinferior = (decimal)Math.Pow((double)DivTMAR, i);
+                    FNEAcumulado = FNEAcumulado + FNE[i - 1] / valorinferior;
                 }
+                decimal valorinferiorF = (decimal)Math.Pow((double)DivTMAR, i);
+                FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
+                fVPN = FNEAcumulado - Inversion;
             }
-            return sum;
-        }
-
-        static float BinarioADecimalFlotante(String input)
-        {
-            float[] arrayBase = new float[] { 0.5F, 0.25F, 0.125F, 0.0625F, 0.03125F, 0.015625F, 0.0078125F, 0.00390625F, 0.001953125F, 0.0009765625F };
-            char[] array = input.ToCharArray();
-            //Array.Reverse(array);
-            float sum = 0;
-            for (int i = 0; i < array.Length; i++)
+            catch (OverflowException e)
             {
-                if (array[i] == '1')
-                {
-                    sum = sum + arrayBase[i];
-                }
+                Console.WriteLine("Exception: {0} > {1}.", e, decimal.MaxValue);
             }
-            return sum;
-        }
-
-        static float concatenacion(String input, String input2)
-        {
-            char[] array = input2.ToCharArray();
-            String parcial = "";
-            int pos = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == '.')
-                {
-                    pos = i;
-                }
-            }
-            for (int j = pos; j < array.Length; j++)
-            {
-                parcial = parcial + array[j];
-            }
-            String resultado = input + parcial;
-            return Convert.ToSingle(resultado); ;
+            return fVPN;
         }
     }
 }
