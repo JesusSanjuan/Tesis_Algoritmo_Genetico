@@ -39,7 +39,6 @@ namespace Tesis_Algoritmo_Genetico
                 float resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
                 Console.Write("Numero en decimal {0:N6}", resultado);
                 Console.Write("\n\n");
-
             }
               //  Console.ReadKey();            
         }
