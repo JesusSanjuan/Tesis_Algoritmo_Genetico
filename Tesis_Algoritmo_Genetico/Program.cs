@@ -14,11 +14,14 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             Console.WriteLine("Introduzca la cantidad de la problacion: ");
-            String poblacion;
-            poblacion = Console.ReadLine();
-            for (int p = 0; p < Int32.Parse(poblacion); p++)
-            { 
-                Random rand = new Random();
+            String poblacionNumero;
+            poblacionNumero = Console.ReadLine();
+            List<float> poblacion = new List<float>();
+            List<String> poblacionBinaria = new List<String>();
+            Random rand = new Random();
+            for (int p = 0; p < Int32.Parse(poblacionNumero); p++)
+            {
+
                 String entero = "";
                 String flotante = "";
                 for (int x = 0; x < 18; x++)
@@ -33,14 +36,25 @@ namespace Tesis_Algoritmo_Genetico
                         flotante = flotante + value;
                     }
                 }
-                Console.Write("Numero completo en binario: {0}.{1} \n", entero, flotante);
+                poblacionBinaria.Add(entero + "." + flotante);
                 int enterooo = BinarioADecimal(entero);
                 float partedecimal = BinarioADecimalFlotante(flotante);
                 float resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
-                Console.Write("Numero en decimal {0:N6}", resultado);
-                Console.Write("\n\n");
+                poblacion.Add(resultado);
             }
-              //  Console.ReadKey();            
+            Console.WriteLine("Imprimiendo Poblacion binaria:");
+            foreach (string contenido in poblacionBinaria)
+            {
+                Console.WriteLine("{0}", contenido);
+            }
+            Console.WriteLine("____________________________\n");
+            Console.WriteLine("Imprimiendo Poblacion en decimal:");
+            foreach (float contenido in poblacion)
+            {
+                Console.WriteLine("{0}", contenido.ToString());
+            }
+            Console.WriteLine("____________________________\n");
+            Console.ReadKey();
         }
 
         static int BinarioADecimal(String input)
@@ -77,16 +91,16 @@ namespace Tesis_Algoritmo_Genetico
         static float concatenacion(String input, String input2)
         {
             char[] array = input2.ToCharArray();
-           String parcial = "";
+            String parcial = "";
             int pos = 0;
-            for(int i=0; i<array.Length;i++)
+            for (int i = 0; i < array.Length; i++)
             {
-                if(array[i]=='.')
+                if (array[i] == '.')
                 {
                     pos = i;
                 }
             }
-            for(int j= pos; j<array.Length;j++)
+            for (int j = pos; j < array.Length; j++)
             {
                 parcial = parcial + array[j];
             }
