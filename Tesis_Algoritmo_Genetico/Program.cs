@@ -13,8 +13,11 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            do
-            {
+            Console.WriteLine("Introduzca la cantidad de la problacion: ");
+            String poblacion;
+            poblacion = Console.ReadLine();
+            for (int p = 0; p < Int32.Parse(poblacion); p++)
+            { 
                 Random rand = new Random();
                 String entero = "";
                 String flotante = "";
@@ -33,10 +36,12 @@ namespace Tesis_Algoritmo_Genetico
                 Console.Write("Numero completo en binario: {0}.{1} \n", entero, flotante);
                 int enterooo = BinarioADecimal(entero);
                 float partedecimal = BinarioADecimalFlotante(flotante);
-                Console.Write("Numero en decimal {0}", concatenacion(enterooo.ToString(), partedecimal.ToString()));
+                float resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
+                Console.Write("Numero en decimal {0:N6}", resultado);
                 Console.Write("\n\n");
-                Console.ReadKey();
-            } while (true);
+
+            }
+              //  Console.ReadKey();            
         }
 
         static int BinarioADecimal(String input)
@@ -72,7 +77,20 @@ namespace Tesis_Algoritmo_Genetico
 
         static float concatenacion(String input, String input2)
         {
-            string parcial = input2.Substring(1, 8);
+            char[] array = input2.ToCharArray();
+           String parcial = "";
+            int pos = 0;
+            for(int i=0; i<array.Length;i++)
+            {
+                if(array[i]=='.')
+                {
+                    pos = i;
+                }
+            }
+            for(int j= pos; j<array.Length;j++)
+            {
+                parcial = parcial + array[j];
+            }
             String resultado = input + parcial;
             return Convert.ToSingle(resultado); ;
         }
