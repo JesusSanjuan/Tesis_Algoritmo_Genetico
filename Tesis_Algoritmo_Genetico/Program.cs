@@ -32,7 +32,7 @@ namespace Tesis_Algoritmo_Genetico
             
             for (int x=0; x<Convert.ToInt32(per);x++)
             {
-                Double numeroaleatorio = rand.NextDouble() * 20000000;
+                Double numeroaleatorio = rand.NextDouble() * 2000000;
                 numeroaleatorio = Math.Round(numeroaleatorio, 4);
                 // Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
                 //  String temporal= Console.ReadLine();
