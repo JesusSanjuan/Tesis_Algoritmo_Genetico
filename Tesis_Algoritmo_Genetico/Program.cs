@@ -14,7 +14,8 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             String inve, per, vss,vpn;
-            double inversion, periodo, VS, VPN;
+            decimal inversion, VS, VPN, ResultadoVPN, ResultadoTIR;
+            int periodo;
             Console.WriteLine("Introduzca la inversion (P): ");
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el perdio (N): ");
@@ -24,17 +25,34 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("Introduzca el VPN posible: ");
             vpn = Console.ReadLine();
 
-            double[] FNE = new double[Convert.ToInt32(per)];
+            decimal[] FNE = new decimal[Convert.ToInt32(per)];
             for(int x=0; x<Convert.ToInt32(per);x++)
             {
                 Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
                 String temporal= Console.ReadLine();
-                FNE[x] = Convert.ToDouble(temporal);
+                FNE[x] = Convert.ToDecimal(temporal);
             }
-            inversion = Convert.ToDouble(inve);
-            periodo = Convert.ToDouble(per);
-            VS = Convert.ToDouble(vss);
-            VPN = Convert.ToDouble(vpn);
+            inversion = Convert.ToDecimal(inve);
+            periodo = Convert.ToInt32(per);
+            VS = Convert.ToDecimal(vss);
+            VPN = Convert.ToDecimal(vpn);
+
+            DateTime tiempo1 = DateTime.Now;
+            ResultadoVPN = CalcularVPN(inversion, FNE, VS, VPN / 100, periodo);
+            Console.Write("\n\n RESULTADO DE VPN: {0}", ResultadoVPN.ToString("0,0.0000")); 
+            if (ResultadoVPN>0)
+            {
+                ResultadoTIR=CalcularTIR(VPN/100, 1, inversion, FNE, VS, periodo);
+            }
+            else
+            {
+                ResultadoTIR=CalcularTIR(VPN/100, 2, inversion, FNE, VS, periodo);
+            }
+            ResultadoTIR = ResultadoTIR * 100;
+            Console.Write("\n\n RESULTADO DE TIR: {0} ", ResultadoTIR.ToString("0,0.0000"));
+            DateTime tiempo2 = DateTime.Now;
+            TimeSpan total = new TimeSpan(tiempo2.Ticks - tiempo1.Ticks);
+            Console.Write("\n\n\n\n TIEMPO TOTAL DE EJECUCION: {0} ", total.ToString());            
             Console.ReadKey();
         }
 
