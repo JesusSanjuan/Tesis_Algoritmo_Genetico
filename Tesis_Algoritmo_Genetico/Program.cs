@@ -18,7 +18,7 @@ namespace Tesis_Algoritmo_Genetico
             int periodo;
             Console.WriteLine("Introduzca la inversion (P): ");
             inve = Console.ReadLine();
-            Console.WriteLine("Introduzca el perdio (N): ");
+            Console.WriteLine("Introduzca el perdio (N) Meses: ");
             per= Console.ReadLine();
             Console.WriteLine("Introduzca la valor de salvamento: ");
             vss = Console.ReadLine();
