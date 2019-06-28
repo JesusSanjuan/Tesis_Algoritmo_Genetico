@@ -26,17 +26,25 @@ namespace Tesis_Algoritmo_Genetico
             vpn = Console.ReadLine();
 
             decimal[] FNE = new decimal[Convert.ToInt32(per)];
-            for(int x=0; x<Convert.ToInt32(per);x++)
+            Random rand = new Random();
+            byte[] bytes = new byte[5];
+            rand.NextBytes(bytes);
+            
+            for (int x=0; x<Convert.ToInt32(per);x++)
             {
-                Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
-                String temporal= Console.ReadLine();
-                FNE[x] = Convert.ToDecimal(temporal);
+                Double numeroaleatorio = rand.NextDouble() * 20000000;
+                numeroaleatorio = Math.Round(numeroaleatorio, 4);
+                // Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
+                //  String temporal= Console.ReadLine();
+                FNE[x] = Convert.ToDecimal(numeroaleatorio);
+                Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x+1,numeroaleatorio.ToString());
             }
             inversion = Convert.ToDecimal(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDecimal(vss);
             VPN = Convert.ToDecimal(vpn);
 
+            Console.ReadKey();
             DateTime tiempo1 = DateTime.Now;
             ResultadoVPN = CalcularVPN(inversion, FNE, VS, VPN / 100, periodo);
             Console.Write("\n\n RESULTADO DE VPN: {0}", ResultadoVPN.ToString("0,0.0000")); 
