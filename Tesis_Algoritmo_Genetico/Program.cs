@@ -22,7 +22,10 @@ namespace Tesis_Algoritmo_Genetico
             Console.ReadKey();
         }
 
-        
+        public static string CalcularTIR(string num1, string num2)
+        {
 
+            return "";
+        }
     }
 }
