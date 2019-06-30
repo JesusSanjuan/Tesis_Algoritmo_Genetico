@@ -18,15 +18,25 @@ namespace Tesis_Algoritmo_Genetico
             num1 = Console.ReadLine();
             Console.WriteLine("Segundo numero: ");
             num2 = Console.ReadLine();
-            Console.WriteLine("Resultado: {0}", CalcularSuma(num1, num2, 2));
+            Console.WriteLine("Resultado: {0}", CalcularMultiplicacion(num1, num2));
             //decimal x = 7922816251426433759354395033m;
             Console.ReadKey();
         }
 
-        public static string CalcularSuma(string num1, string num2,int posicion)
+        public static string CalcularMultiplicacion(string num1, string num2)
         {
             num1 = num1.Replace(".", "");
             num2 = num2.Replace(".", "");
+
+
+
+
+
+
+
+
+
+
             int a1 = num1.Length;
             int a2 = num2.Length;
             char[] array1 = num1.ToCharArray();
