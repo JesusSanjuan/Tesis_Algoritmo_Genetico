@@ -61,8 +61,9 @@ namespace Tesis_Algoritmo_Genetico
             }
             /*Contador punto*/
 
-            if (a1>a2)
+            if (a1>=a2)
             {
+                acarreo = new char[a1];
                 matriz = new char[a2+1, a1 + a2];
                 for(int x=0; x<a2; x++)
                 {
@@ -71,12 +72,35 @@ namespace Tesis_Algoritmo_Genetico
                         matriz[x,y] = '0';
                     }
                 }
-                for (int i = array2.Length; 0 < i; i--)
+                for (int x = 0; x < acarreo.Length; x++)
                 {
-                    for (int j = array1.Length; 0 <i ; j--)
+                    acarreo[x] = '0';
+                }
+                
+                int renglon = 1;
+                for (int i = array2.Length-1; 0 < i; i--)
+                {
+                    int ancho = a1 + a2 - 1;
+                    int numero1 = int.Parse(array2[i].ToString());
+                    for (int j = array1.Length-1; 0 <=j ; j--)
                     {
-
+                        int numero2 = int.Parse(array1[j].ToString());
+                        int sumacarreo= Int32.Parse(acarreo[j].ToString());
+                        int mult = (numero1 * numero2)+sumacarreo;
+                        string con1 = mult.ToString();
+                        char[] myStringchar = con1.ToCharArray();
+                        if(con1.Length==2)
+                        {
+                            acarreo[j-1] = myStringchar[0];
+                            matriz[renglon,ancho] = myStringchar[1];
+                        }
+                        else
+                        {
+                            matriz[renglon, ancho] = myStringchar[0];
+                        }
+                        ancho = ancho - 1;
                     }
+                    renglon = renglon - 1;
                 }
             }
             else
