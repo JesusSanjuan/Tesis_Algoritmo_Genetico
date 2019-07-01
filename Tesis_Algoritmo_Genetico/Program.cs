@@ -133,37 +133,44 @@ namespace Tesis_Algoritmo_Genetico
                         matriz[i, j] = charsuma[0];
                     }
                 }
-
-                resultadoEnviar = new char[ a1 + a2 + 2];
+                if (matriz[a2 + 1, 0] == '0')
+                {
+                    resultadoEnviar = new char[a1 + a2 + 1];
+                }
+                else
+                {
+                    resultadoEnviar = new char[a1 + a2 + 2];
+                }
                 int punto = primer + segundo;
                 int contador = 0;
                Boolean xx=false;
-                for(int a=a1+ a2; 0<=a;a--)
+                for(int a=a1+ a2; 0<a;a--)
                 {                    
                     if(contador==punto)
                     {
                         int tem = a;
-                        resultadoEnviar[++tem] = '.';
+                        resultadoEnviar[tem] = '.';
                         a++;
                         xx = true;
                     }
                     else
                     {
-                        if(xx==false)
+                        
+                        if (xx==false)
                         {
                             int tem = a;
-                            resultadoEnviar[++tem] = matriz[a2 + 1, a];
+                            resultadoEnviar[tem] = matriz[a2 + 1, a];
                         }
                         else
                         {
                             int tem = a;
-                            resultadoEnviar[tem] = matriz[a2 + 1, a];
+                            resultadoEnviar[--tem] = matriz[a2 + 1, a];
                         }
                                                
                     }
                     contador++;
                 }
-              // s = new string(resultadoEnviar);
+                s = new string(resultadoEnviar);
                 for(int v=0;v<resultadoEnviar.Length;v++)
                 {
                 }
