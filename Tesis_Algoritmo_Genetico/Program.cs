@@ -19,7 +19,6 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("Segundo numero: ");
             num2 = Console.ReadLine();
             Console.WriteLine("Resultado: {0}", CalcularMultiplicacion(num1, num2));
-            //decimal x = 7922816251426433759354395033m;
             Console.ReadKey();
         }
 
@@ -36,7 +35,7 @@ namespace Tesis_Algoritmo_Genetico
             char[] array2 = num2.ToCharArray();
             char[] acarreo;
             char[] resultadoEnviar;
-
+            string s="";
             /*Contador punto*/
             int primer =-1, segundo=-1;
             Boolean primerB=false, segundoB=false;            
@@ -137,6 +136,37 @@ namespace Tesis_Algoritmo_Genetico
 
                 resultadoEnviar = new char[ a1 + a2 + 2];
                 int punto = primer + segundo;
+                int contador = 0;
+               Boolean xx=false;
+                for(int a=a1+ a2; 0<=a;a--)
+                {                    
+                    if(contador==punto)
+                    {
+                        int tem = a;
+                        resultadoEnviar[++tem] = '.';
+                        a++;
+                        xx = true;
+                    }
+                    else
+                    {
+                        if(xx==false)
+                        {
+                            int tem = a;
+                            resultadoEnviar[++tem] = matriz[a2 + 1, a];
+                        }
+                        else
+                        {
+                            int tem = a;
+                            resultadoEnviar[tem] = matriz[a2 + 1, a];
+                        }
+                                               
+                    }
+                    contador++;
+                }
+              // s = new string(resultadoEnviar);
+                for(int v=0;v<resultadoEnviar.Length;v++)
+                {
+                }
             }
             /*else
             {
@@ -144,7 +174,7 @@ namespace Tesis_Algoritmo_Genetico
             }*/
 
             
-            return "";
+            return s;
         }
     }
 }
