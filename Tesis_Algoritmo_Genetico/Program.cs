@@ -171,9 +171,13 @@ namespace Tesis_Algoritmo_Genetico
                     contador++;
                 }
                 s = new string(resultadoEnviar);
-                for(int v=0;v<resultadoEnviar.Length;v++)
+                if (resultadoEnviar[0] == '0')
                 {
+                    s = s.Substring(1, s.Length - 1);
                 }
+                
+                
+
             }
             /*else
             {
