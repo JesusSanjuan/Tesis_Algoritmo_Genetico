@@ -63,7 +63,7 @@ namespace Tesis_Algoritmo_Genetico
 
             if (a1>=a2)
             {
-                acarreo = new char[a1];
+               
                 matriz = new char[a2+1, a1 + a2];
                 for(int x=0; x<a2; x++)
                 {
@@ -72,15 +72,17 @@ namespace Tesis_Algoritmo_Genetico
                         matriz[x,y] = '0';
                     }
                 }
-                for (int x = 0; x < acarreo.Length; x++)
-                {
-                    acarreo[x] = '0';
-                }
+                
                 
                 int renglon = 1;
                 for (int i = array2.Length-1; 0 < i; i--)
                 {
                     int ancho = a1 + a2 - 1;
+                    acarreo = new char[a1];
+                    for (int x = 0; x < acarreo.Length; x++)
+                    {
+                        acarreo[x] = '0';
+                    }
                     int numero1 = int.Parse(array2[i].ToString());
                     for (int j = array1.Length-1; 0 <=j ; j--)
                     {
