@@ -24,12 +24,26 @@ namespace Tesis_Algoritmo_Genetico
 
         public static string CalcularMultiplicacion(string num1, string num2)
         {
+
+            int a1 = num1.Length;
+            int a2 = num2.Length;
+            String temportal = ""; int temn = 0;
+            /*Reordeno*/
+            if (a1 <= a2)
+            {
+                temportal =num1;
+                num1 = num2;
+                num2 = temportal;
+                temn = a1;
+                a1 = a2;
+                a2 = temn;
+            }
+            /*Reordeno*/
+
             String original1 = num1, orignal2 = num2;
             num1 = num1.Replace(".", "");
             num2 = num2.Replace(".", "");
 
-            int a1 = num1.Length;
-            int a2 = num2.Length;
             char[,] matriz;
             char[] array1 = num1.ToCharArray();
             char[] array2 = num2.ToCharArray();
@@ -55,10 +69,7 @@ namespace Tesis_Algoritmo_Genetico
                     segundo = segundo + 1;
                 }
             }
-            /*Contador punto*/
-
-            if (a1 >= a2)
-            {
+            /*Contador punto*/            
 
                 matriz = new char[a2 + 2, a1 + a2+1];
                 for (int x = 0; x <= a2+1; x++)
@@ -68,7 +79,6 @@ namespace Tesis_Algoritmo_Genetico
                         matriz[x, y] = '0';
                     }
                 }
-
 
                 int renglon = 1;
                 int escalera = 0;
@@ -174,15 +184,7 @@ namespace Tesis_Algoritmo_Genetico
                 if (resultadoEnviar[0] == '0')
                 {
                     s = s.Substring(1, s.Length - 1);
-                }
-                
-                
-
-            }
-            /*else
-            {
-                matriz = new char[a2 + 1, a1 + a2];
-            }*/
+                } 
 
             
             return s;
