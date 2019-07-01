@@ -125,11 +125,14 @@ namespace Tesis_Algoritmo_Genetico
             try
             {
                 decimal DivTMAR = 1M + TMAR;
+                Console.WriteLine("\n\n\n\nCalculo de VPN\n");
                 for (i = 1; i < Periodo; i++)
                 {
                     decimal valorinferior = (decimal)Math.Pow((double)DivTMAR, i);
                     FNEAcumulado = FNEAcumulado + FNE[i - 1] / valorinferior;
+                    Console.WriteLine("Pos: {0} Valor: {1}",i,FNEAcumulado);
                 }
+                Console.WriteLine("\n\n\n\n\n");
                 decimal valorinferiorF = (decimal)Math.Pow((double)DivTMAR, i);
                 FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
                 fVPN = FNEAcumulado - Inversion;
