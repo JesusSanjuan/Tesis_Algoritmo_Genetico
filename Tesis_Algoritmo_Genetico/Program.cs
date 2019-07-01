@@ -34,10 +34,7 @@ namespace Tesis_Algoritmo_Genetico
             char[,] matriz;
             char[] array1 = num1.ToCharArray();
             char[] array2 = num2.ToCharArray();
-            char[] arra1;
-            char[] arra2;
             char[] acarreo;
-            char[] resultado;
             char[] resultadoEnviar;
 
             /*Contador punto*/
@@ -78,7 +75,7 @@ namespace Tesis_Algoritmo_Genetico
                 int escalera = 0;
                 for (int i = array2.Length - 1; 0 <= i; i--)
                 {
-                    int ancho = a1 + a2 - 1;
+                    int ancho = a1 + a2;
                     acarreo = new char[a1];
                     for (int x = 0; x < acarreo.Length; x++)
                     {
@@ -114,10 +111,12 @@ namespace Tesis_Algoritmo_Genetico
                     escalera = escalera + 1;
                     renglon = renglon + 1;
                 }
-                int acumuladorsuma = 0;
-                for (int j = a1 + a2 - 1; 0 < j; j--)
+                
+                for (int j = a1 + a2 ; 0 <= j; j--)
                 {
-                    for (int i = 0; i <= a2; i++)
+                    int i;
+                    int acumuladorsuma = 0;
+                    for (i = 0; i <= a2; i++)
                     {
                         int numero1 = int.Parse(matriz[i, j].ToString());
                         acumuladorsuma = acumuladorsuma + numero1;
@@ -126,16 +125,23 @@ namespace Tesis_Algoritmo_Genetico
                     char[] charsuma = suma.ToCharArray();
                     if (suma.Length == 2)
                     {
+                        int temp = j;
+                        matriz[i, j] = charsuma[1];
+                        matriz[0, --temp] = charsuma[0];
                     }
                     else
                     {
+                        matriz[i, j] = charsuma[0];
                     }
                 }
+
+                resultadoEnviar = new char[ a1 + a2 + 2];
+                int punto = primer + segundo;
             }
-            else
+            /*else
             {
                 matriz = new char[a2 + 1, a1 + a2];
-            }
+            }*/
 
             
             return "";
