@@ -25,20 +25,13 @@ namespace Tesis_Algoritmo_Genetico
 
         public static string CalcularMultiplicacion(string num1, string num2)
         {
+            String original1 = num1, orignal2 = num2;
             num1 = num1.Replace(".", "");
             num2 = num2.Replace(".", "");
 
-
-
-
-
-
-
-
-
-
             int a1 = num1.Length;
             int a2 = num2.Length;
+            char[,] matriz;
             char[] array1 = num1.ToCharArray();
             char[] array2 = num2.ToCharArray();
             char[] arra1;
@@ -46,108 +39,53 @@ namespace Tesis_Algoritmo_Genetico
             char[] acarreo;
             char[] resultado;
             char[] resultadoEnviar;
+
+            /*Contador punto*/
+            int primer =-1, segundo=-1;
+            Boolean primerB=false, segundoB=false;            
+            for (int d = 0; d < original1.Length;d++)
+            {
+                if(original1[d]=='.' || primerB)
+                {
+                    primerB = true;
+                    primer = primer + 1;
+                }
+            }
+            for (int d2 = 0; d2 < orignal2.Length; d2++)
+            {
+                if (orignal2[d2] == '.' || segundoB)
+                {
+                    segundoB = true;
+                    segundo = segundo + 1;
+                }
+            }
+            /*Contador punto*/
+
             if (a1>a2)
             {
-                arra1 = new char[num1.Length];
-                arra2 = new char[num1.Length];
-                acarreo = new char[num1.Length];
-                resultado = new char[num1.Length+1];
-                resultadoEnviar = new char[num1.Length + 2];
-                for (int i = 0; i < arra1.Length; i++)
+                matriz = new char[a2+1, a1 + a2];
+                for(int x=0; x<a2; x++)
                 {
-                    arra1[i] = '0';
-                    arra2[i] = '0';
-                    acarreo[i] = '0';
-                    resultado[i] = '0';
-                    resultadoEnviar[i] = '0';
+                    for(int y=0;y< a1 + a2; y++)
+                    {
+                        matriz[x,y] = '0';
+                    }
                 }
-
-                arra1 = num1.ToCharArray();
-                int reducir = arra1.Length - 1;
-                for (int i = array2.Length - 1; 0 <= i; i--)
+                for (int i = array2.Length; 0 < i; i--)
                 {
-                    arra2[reducir--] = array2[i];
+                    for (int j = array1.Length; 0 <i ; j--)
+                    {
+
+                    }
                 }
             }
             else
             {
-                arra1 = new char[num2.Length];
-                arra2 = new char[num2.Length];
-                acarreo = new char[num2.Length];
-                resultado = new char[num2.Length + 1];
-                resultadoEnviar = new char[num2.Length + 2];
-                for (int i = 0; i < arra1.Length; i++)
-                {
-                    arra1[i] = '0';
-                    arra2[i] = '0';
-                    acarreo[i] = '0';
-                    resultado[i] = '0';
-                    resultadoEnviar[i] = '0';
-                }
-                
-                int reducir = arra1.Length - 1;
-                for (int i = array1.Length - 1; 0 <= i; i--)
-                {
-                    arra1[reducir--] = array1[i];
-                }
-                arra2 = num2.ToCharArray();
+                matriz = new char[a2+1, a1 + a2];
             }
 
-            for(int x=arra1.Length;1<=x;x--)
-            {
-                int ar = int.Parse(acarreo[x - 1].ToString());
-                int v1 = int.Parse(arra1[x - 1].ToString());
-                int v2 = int.Parse(arra2[x - 1].ToString());
-                int resultadocolumna = ar + v1 + v2;
-                string myString = resultadocolumna.ToString();
-                char[] myStringchar = myString.ToCharArray();
-                if (x == 1)
-                {
-                    if (myString.Length == 2)
-                    {
-                        resultado[x - 1] = myStringchar[0];
-                        resultado[x] = myStringchar[1];
-                    }
-                    else
-                    {
-                        resultado[x] = myStringchar[0];
-                    }                        
-                }
-                else
-                {                       
-                    if (myString.Length == 2)
-                    {
-                        acarreo[x - 2] = myStringchar[0];
-                        resultado[x] = myStringchar[1];
-                    }
-                    else
-                    {
-                        resultado[x] = myStringchar[0];
-                    }
-                }
-            }
-            int contador = 0;
-            int incremento = 0;
-            for (int x = resultadoEnviar.Length; 0 < x; x--)
-            {                  
-                if (2== contador)
-                {
-                    resultadoEnviar[x - 1] = '.';
-                    incremento = 1;
-                }
-                else
-                {
-                    resultadoEnviar[x-1] = resultado[x - 2+incremento];
-                }
-                contador = contador + 1;
-            }        
-                
-            string resultadoT = new string(resultadoEnviar);
-            if (resultadoEnviar[0] == '0')
-            {
-                resultadoT = resultadoT.Substring(1, resultadoT.Length-1);
-            }
-            return resultadoT;
+            
+            return "";
         }
     }
 }
