@@ -17,17 +17,17 @@ namespace Tesis_Algoritmo_Genetico
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
             List<float> poblacion = new List<float>();
+            List<String> poblacionBinariaV = new List<String>();
             List<String> poblacionBinaria = new List<String>();
             Random rand = new Random();
             for (int p = 0; p < Int32.Parse(poblacionNumero); p++)
             {
-
                 String entero = "";
                 String flotante = "";
-                for (int x = 0; x < 18; x++)
+                for (int x = 0; x < 20; x++)
                 {
                     int value = rand.Next(0, 2);
-                    if (x < 9)
+                    if (x < 8)
                     {
                         entero = entero + value;
                     }
@@ -36,7 +36,8 @@ namespace Tesis_Algoritmo_Genetico
                         flotante = flotante + value;
                     }
                 }
-                poblacionBinaria.Add(entero + "." + flotante);
+                poblacionBinaria.Add(entero + flotante);
+                poblacionBinariaV.Add(entero + "." + flotante);
                 int enterooo = BinarioADecimal(entero);
                 float partedecimal = BinarioADecimalFlotante(flotante);
                 float resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
@@ -48,11 +49,17 @@ namespace Tesis_Algoritmo_Genetico
                 Console.WriteLine("{0}", contenido);
             }
             Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo Poblacion en decimal:");
-            foreach (float contenido in poblacion)
+            Console.WriteLine("Imprimiendo Poblacion binaria con punto:");
+            foreach (string contenido in poblacionBinariaV)
             {
-                Console.WriteLine("{0}", contenido.ToString());
+                Console.WriteLine("{0}", contenido);
             }
+            Console.WriteLine("____________________________\n");            
+            Console.WriteLine("Imprimiendo Poblacion en decimal:");
+             foreach (float contenido in poblacion)
+             {
+                 Console.WriteLine("{0}", contenido.ToString());
+             }
             Console.WriteLine("____________________________\n");
             Console.ReadKey();
         }
@@ -74,7 +81,7 @@ namespace Tesis_Algoritmo_Genetico
 
         static float BinarioADecimalFlotante(String input)
         {
-            float[] arrayBase = new float[] { 0.5F, 0.25F, 0.125F, 0.0625F, 0.03125F, 0.015625F, 0.0078125F, 0.00390625F, 0.001953125F, 0.0009765625F };
+            float[] arrayBase = new float[] { 0.5F, 0.25F, 0.125F, 0.0625F, 0.03125F, 0.015625F, 0.0078125F, 0.00390625F, 0.001953125F, 0.0009765625F, 0.00048828125F,0.000244140625F, 0.0001220703125F, 0.00006103515625F, 0.000030517578125F};
             char[] array = input.ToCharArray();
             //Array.Reverse(array);
             float sum = 0;
