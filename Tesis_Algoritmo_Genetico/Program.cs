@@ -13,7 +13,7 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Introduzca la cantidad de la problacion: ");
+            Console.WriteLine("Introduzca la cantidad de la problacion:  ");
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
             List<float> poblacion = new List<float>();
