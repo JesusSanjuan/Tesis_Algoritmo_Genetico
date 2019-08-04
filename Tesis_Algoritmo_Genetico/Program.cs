@@ -60,10 +60,22 @@ namespace Tesis_Algoritmo_Genetico
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
-            Console.WriteLine("Buscando aproximacion inicial..");
-           decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
-            Console.WriteLine("____________________________ Terminado\n");
-
+            Console.WriteLine("\n\nBuscando aproximacion inicial..");
+            decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
+            Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
+            Console.WriteLine("____________________________\n");
+            Console.WriteLine("Generandos numeros aleatorios -3 y +1 entorno a la aproximacion incial\n");
+            Random rand2 = new Random();
+            // Generate and display 5 random byte (integer) values.
+            byte[] bytes2 = new byte[10];
+            rand2.NextBytes(bytes2);
+            double lowerBound = (double) aproxInicial- 3;
+            double upperBound = (double )aproxInicial+ 1;
+            for (int ctr = 0; ctr <= Int32.Parse(poblacionNumero); ctr++)
+            {
+                Console.Write("Numero aletorio generado: {0,8:N6}\n", rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
+            }
+            Console.WriteLine("____________________________\n");
 
             List<decimal> poblacion = new List<decimal>();
             List<String> poblacionBinariaV = new List<String>();
@@ -181,6 +193,7 @@ namespace Tesis_Algoritmo_Genetico
 
             decimal x0;
             x0 =(decimal) Math.Pow((double)(sumainferior/Inversion ), (double)(1/resultado));
+            x0 = (x0 - 1)*100;
             return x0;
         }
 
