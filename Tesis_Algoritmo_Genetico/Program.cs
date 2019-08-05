@@ -14,8 +14,8 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             /*Lectura de informacion de datos de VPN*/
-            String inve, per, vss, vpn;
-            decimal inversion, VS, VPN, ResultadoVPN, ResultadoTIR;
+            String inve, per, vss;
+            decimal inversion, VS;
             int periodo;
             Console.WriteLine("Introduzca la inversion (P): ");
             inve = Console.ReadLine();
@@ -65,59 +65,51 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Generandos numeros aleatorios -3 y +1 entorno a la aproximacion incial\n");
-            Random rand2 = new Random();
+
             // Generate and display 5 random byte (integer) values.
+            Random rand2 = new Random();            
             byte[] bytes2 = new byte[5];
             rand2.NextBytes(bytes2);
             double lowerBound = (double) aproxInicial- 3;
-            double upperBound = (double )aproxInicial+ 1;
-            List<decimal> poblaciond = new List<decimal>();
-            for (int ctr = 0; ctr < Int32.Parse(poblacionNumero); ctr++)
-            {
-                Console.Write("Numero aletorio generado: {0,8:N6}\n", rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
-                poblaciond.Add((decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound));
-            }
-            Console.WriteLine("____________________________\n");
+            double upperBound = (double )aproxInicial+ 1;      
 
             List<decimal> poblacion = new List<decimal>();
-            List<String> poblacionBinariaV = new List<String>();
             List<String> poblacionBinaria = new List<String>();
-            Random rand = new Random();
-            for (int p = 0; p < Int32.Parse(poblacionNumero); p++)
+
+            for (int ctr = 0; ctr < Int32.Parse(poblacionNumero); ctr++)
             {
-                String entero = "";
-                String flotante = "";
-                for (int x = 0; x < 20; x++)
-                {
-                    int value = rand.Next(0, 2);
-                    if (x < 8)
-                    {
-                        entero = entero + value;
-                    }
-                    else
-                    {
-                        flotante = flotante + value;
-                    }
-                }
-                poblacionBinaria.Add(entero + flotante);
-                poblacionBinariaV.Add(entero + "." + flotante);
+                decimal numerogenerado = (decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
+                Console.Write("Numero aletorio generado: {0,8:N6}\n", numerogenerado);
+                int count = BitConverter.GetBytes(decimal.GetBits(numerogenerado)[3])[2];
+                string str = numerogenerado.ToString();
+                List<string> resultados = new List<string>();
+                resultados = dividircadena(str, count + 1);
+
+                String primerconversion = enteroabinario(resultados[0]);
+                decimal conprimerconversion= Convert.ToDecimal(primerconversion);
+                string fmt = "000000";
+                primerconversion = conprimerconversion.ToString(fmt);
+                String segundaconversion = DecimalBinarioaBinario(resultados[1]);
+                String numerocompletobinario = primerconversion + "." + segundaconversion;
+                poblacionBinaria.Add(numerocompletobinario);
+
+                String entero = numerocompletobinario.Substring(0, numerocompletobinario.IndexOf("."));
+                String flotante = numerocompletobinario.Substring(numerocompletobinario.IndexOf(".") + 1, numerocompletobinario.Length - numerocompletobinario.IndexOf(".") - 1);
+                
                 int enterooo = BinarioAentero(entero);
                 float partedecimal = BinarioADecimalFlotante(flotante);
                 decimal resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
-                poblacion.Add(resultado);
+                poblacion.Add(resultado);                
             }
-            Console.WriteLine("Imprimiendo Poblacion binaria:");
+            Console.WriteLine("____________________________\n");
+
+            Console.WriteLine("Imprimiendo Poblacion binaria con punto:");
             foreach (string contenido in poblacionBinaria)
             {
                 Console.WriteLine("{0}", contenido);
             }
             Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo Poblacion binaria con punto:");
-            foreach (string contenido in poblacionBinariaV)
-            {
-                Console.WriteLine("{0}", contenido);
-            }
-            Console.WriteLine("____________________________\n");            
+                     
             Console.WriteLine("Imprimiendo Poblacion en decimal:");
              foreach (float contenido in poblacion)
              {
@@ -184,7 +176,7 @@ namespace Tesis_Algoritmo_Genetico
             return sum;
         }
 
-       /* static string convertirbinariodecimal(string valor)
+       static string DecimalBinarioaBinario(string valor)
         {
             double valfloat = Convert.ToDouble(valor);
             valfloat = valfloat * 2;
@@ -200,13 +192,13 @@ namespace Tesis_Algoritmo_Genetico
                 salida = Convert.ToDouble(resultados[1]);
                 valfloat = Convert.ToDouble(resultados[1]) * 2;
                 contador++;
-                if (contador == 8)
+                if (contador == 12)
                 {
                     break;
                 }
             } while (salida != 0);
             return convertirstring(binariofraccion);
-        }*/
+        }
 
 
         static decimal concatenacion(String input, String input2)
@@ -246,7 +238,7 @@ namespace Tesis_Algoritmo_Genetico
             return x0;
         }
 
-            static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
+        static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
         {
             List<decimal> Resultado = new List<decimal>();
             List<decimal> ProbabilidadSeleccion = new List<decimal>();
@@ -254,14 +246,17 @@ namespace Tesis_Algoritmo_Genetico
             decimal valorSumatoria=0;
             foreach (decimal contenido in poblacion)
             {
-                //Console.WriteLine("{0}", contenido.ToString());
                 valorSumatoria = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
-                SumatorioaFx = SumatorioaFx + valorSumatoria;
+                if(valorSumatoria>0)
+                {
+                    SumatorioaFx = SumatorioaFx + valorSumatoria;
+                    
+                }
                 Resultado.Add(valorSumatoria);
             }
-            foreach (decimal contenido in poblacion)
+            foreach (decimal contenido in Resultado)
             {
-                ProbabilidadSeleccion.Add(contenido/valorSumatoria);
+                ProbabilidadSeleccion.Add(contenido/SumatorioaFx);
             }
             return 0;
         }
@@ -288,6 +283,36 @@ namespace Tesis_Algoritmo_Genetico
             FNEAcumulado = Convert.ToDecimal(str4);
             fVPN = FNEAcumulado - Inversion;
             return fVPN;
+        }
+        static List<string> dividircadena(string cadena, int tamano)
+        {
+            String cad1 = "";
+            String cad2 = "";
+            int pos = 0;
+            List<string> cadenas = new List<string>();
+            for (int i = 0; i < cadena.Length - 1; i++)
+            {
+                if (cadena[i] == '.')
+                {
+                    pos = i;
+                    break;
+                }
+            }
+            cad1 = cadena.Substring(0, pos);
+            cad2 = cadena.Substring(pos, tamano);
+            cadenas.Add(cad1);
+            cadenas.Add(cad2);
+            return cadenas;
+        }
+
+        static string convertirstring(List<string> valor)
+        {
+            String palabra = "";
+            foreach (string contenido in valor)
+            {
+                palabra = palabra + contenido;
+            }
+            return palabra;
         }
     }
 }
