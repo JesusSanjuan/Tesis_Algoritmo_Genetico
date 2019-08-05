@@ -67,13 +67,15 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("Generandos numeros aleatorios -3 y +1 entorno a la aproximacion incial\n");
             Random rand2 = new Random();
             // Generate and display 5 random byte (integer) values.
-            byte[] bytes2 = new byte[10];
+            byte[] bytes2 = new byte[5];
             rand2.NextBytes(bytes2);
             double lowerBound = (double) aproxInicial- 3;
             double upperBound = (double )aproxInicial+ 1;
-            for (int ctr = 0; ctr <= Int32.Parse(poblacionNumero); ctr++)
+            List<decimal> poblaciond = new List<decimal>();
+            for (int ctr = 0; ctr < Int32.Parse(poblacionNumero); ctr++)
             {
                 Console.Write("Numero aletorio generado: {0,8:N6}\n", rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
+                poblaciond.Add((decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound));
             }
             Console.WriteLine("____________________________\n");
 
@@ -99,7 +101,7 @@ namespace Tesis_Algoritmo_Genetico
                 }
                 poblacionBinaria.Add(entero + flotante);
                 poblacionBinariaV.Add(entero + "." + flotante);
-                int enterooo = BinarioADecimal(entero);
+                int enterooo = BinarioAentero(entero);
                 float partedecimal = BinarioADecimalFlotante(flotante);
                 decimal resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
                 poblacion.Add(resultado);
@@ -129,7 +131,7 @@ namespace Tesis_Algoritmo_Genetico
 
         }
 
-        static int BinarioADecimal(String input)
+        static int BinarioAentero(String input)
         {
             char[] array = input.ToCharArray();
             Array.Reverse(array);
@@ -142,6 +144,28 @@ namespace Tesis_Algoritmo_Genetico
                 }
             }
             return sum;
+        }
+
+        static string enteroabinario(String cadena)
+        {
+            int Num = Convert.ToInt32(cadena);
+            String cad = "";
+            if (Num > 0)
+            {
+                while (Num > 0)
+                {
+                    if (Num % 2 == 0)
+                    {
+                        cad = "0" + cad;
+                    }
+                    else
+                    {
+                        cad = "1" + cad;
+                    }
+                    Num = (int)(Num / 2);
+                }
+            }
+            return cad;
         }
 
         static float BinarioADecimalFlotante(String input)
@@ -159,6 +183,31 @@ namespace Tesis_Algoritmo_Genetico
             }
             return sum;
         }
+
+       /* static string convertirbinariodecimal(string valor)
+        {
+            double valfloat = Convert.ToDouble(valor);
+            valfloat = valfloat * 2;
+            List<string> binariofraccion = new List<string>();
+            double salida = 0;
+            int contador = 0;
+            do
+            {
+                List<string> resultados = new List<string>();
+                int count = BitConverter.GetBytes(decimal.GetBits((decimal)valfloat)[3])[2];
+                resultados = dividircadena(Convert.ToString(valfloat), count + 1);
+                binariofraccion.Add(resultados[0]);
+                salida = Convert.ToDouble(resultados[1]);
+                valfloat = Convert.ToDouble(resultados[1]) * 2;
+                contador++;
+                if (contador == 8)
+                {
+                    break;
+                }
+            } while (salida != 0);
+            return convertirstring(binariofraccion);
+        }*/
+
 
         static decimal concatenacion(String input, String input2)
         {
