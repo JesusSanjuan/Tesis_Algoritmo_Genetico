@@ -256,7 +256,7 @@ namespace Tesis_Algoritmo_Genetico
             }
             foreach (decimal contenido in Resultado)
             {
-                ProbabilidadSeleccion.Add(contenido/SumatorioaFx);
+                ProbabilidadSeleccion.Add((contenido/SumatorioaFx)*100);
             }
             return 0;
         }
