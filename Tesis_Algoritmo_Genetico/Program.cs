@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-
 namespace Tesis_Algoritmo_Genetico
 {
 
@@ -246,22 +245,51 @@ namespace Tesis_Algoritmo_Genetico
             decimal valorSumatoria=0;
             foreach (decimal contenido in poblacion)
             {
-                valorSumatoria = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
-                if(valorSumatoria>0)
-                {
-                    SumatorioaFx = SumatorioaFx + valorSumatoria;
-                    
-                }
+                valorSumatoria = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);                
                 Resultado.Add(valorSumatoria);
             }
-            foreach (decimal contenido in Resultado)
+            List<decimal> Resultadoajustado = Reajuste(Resultado);
+            foreach (decimal contenido in Resultadoajustado)
+            {
+                SumatorioaFx = SumatorioaFx + contenido;
+            }          
+            
+            foreach (decimal contenido in Resultadoajustado)
             {
                 ProbabilidadSeleccion.Add((contenido/SumatorioaFx)*100);
             }
             return 0;
         }
 
-        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
+        static List<decimal> Reajuste(List<decimal> resultado)
+        {
+            decimal mayor = 0;
+            decimal menor = 0;
+            int pos = 0;
+
+            for (int i = 0; i < resultado.Count; i++)
+            {                
+                if (resultado[i] > mayor)
+                {
+                    mayor = resultado[i];
+                    pos = i;
+                }
+                if (resultado[i] < menor)
+                {
+                    menor = resultado[i];
+                    pos = i;
+                }
+            }
+            ;
+            List<decimal> cadenas = new List<decimal>();
+            for (int i = 0; i < resultado.Count; i++)
+            {
+                cadenas.Add(resultado[i] + Math.Abs(menor));
+            }                
+            return cadenas;
+        }
+
+            public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
