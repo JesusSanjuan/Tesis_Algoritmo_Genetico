@@ -16,7 +16,7 @@ namespace Tesis_Algoritmo_Genetico
             String inve, per, vss;
             decimal inversion, VS;
             int periodo;
-            Console.WriteLine("Introduzca la inversion (P): ");
+            Console.WriteLine("Introduzca la inversion (P):  ");
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el periodo (N) Meses: ");
             per = Console.ReadLine();
