@@ -55,7 +55,7 @@ namespace Tesis_Algoritmo_Genetico
             //VPN = Convert.ToDecimal(vpn);
             /*Lectura de informacion de datos de VPN*/
 
-            Console.WriteLine("Introduzca la cantidad de la problacion:  ");
+            Console.WriteLine("Introduzca la cantidad de la problacion (Numeros pares):  ");
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
@@ -239,25 +239,59 @@ namespace Tesis_Algoritmo_Genetico
 
         static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
         {
-            List<decimal> Resultado = new List<decimal>();
+            List<decimal> ResultadosFX = new List<decimal>();
             List<decimal> ProbabilidadSeleccion = new List<decimal>();
             decimal SumatorioaFx=0;
-            decimal valorSumatoria=0;
+            decimal valorFX=0;
             foreach (decimal contenido in poblacion)
             {
-                valorSumatoria = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);                
-                Resultado.Add(valorSumatoria);
+                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);                
+                ResultadosFX.Add(valorFX);
+                SumatorioaFx = SumatorioaFx + valorFX;
             }
-            List<decimal> Resultadoajustado = Reajuste(Resultado);
-            foreach (decimal contenido in Resultadoajustado)
+            /*List<decimal> Resultadoajustado = Reajuste(Resultado);
+            foreach (decimal contenido in Resultado)
             {
                 SumatorioaFx = SumatorioaFx + contenido;
-            }          
+            }  */        
             
-            foreach (decimal contenido in Resultadoajustado)
+           /* foreach (decimal contenido in Resultado)
             {
                 ProbabilidadSeleccion.Add((contenido/SumatorioaFx)*100);
+            }*/
+
+            List<decimal> reorganizacionPos = ResultadosFX.Where(x => x > 0).ToList();
+            decimal valorPositivo = reorganizacionPos.Min(x => x);
+            int indexPositivo = reorganizacionPos.FindIndex(x => x == valorPositivo);
+
+            List<decimal> reorganizacionNega = ResultadosFX.Where(x => x < 0).ToList();
+            decimal valorNegativo= reorganizacionNega.Max(x => x);
+            int indexNegativo = reorganizacionNega.FindIndex(x => x == valorNegativo);
+
+
+            var torneo1 = new List<int>();
+            while (torneo1.Count < 10)
+            {
+                int numeroAleatorio = new Random().Next(0, 10);
+                if (!torneo1.Contains(numeroAleatorio))
+                {
+                    torneo1.Add(numeroAleatorio);
+                }
             }
+
+            var torneo2 = new List<int>();
+            while (torneo2.Count < 10)
+            {
+                int numeroAleatorio = new Random().Next(0, 10);
+                if (!torneo2.Contains(numeroAleatorio))
+                {
+                    torneo2.Add(numeroAleatorio);
+                }
+            }
+
+
+
+
             return 0;
         }
 
