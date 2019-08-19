@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace Tesis_Algoritmo_Genetico
 {
-
     class Program
     {
         static void Main(string[] args)
@@ -37,7 +36,7 @@ namespace Tesis_Algoritmo_Genetico
             FNE[4] = 400;
             FNE[5] = 200;
 
-         /*   for (int x = 0; x < Convert.ToInt32(per); x++)
+            /*for (int x = 0; x < Convert.ToInt32(per); x++)
             {
                 /*Double numeroaleatorio = rand0.NextDouble() * 950000;
                 numeroaleatorio = Math.Round(numeroaleatorio, 4);
@@ -73,151 +72,35 @@ namespace Tesis_Algoritmo_Genetico
             double upperBound = (double )aproxInicial+ 1;      
 
             List<decimal> poblacion = new List<decimal>();
-            List<String> poblacionBinaria = new List<String>();
+            List<int> poblacionPunto = new List<int>();
 
-            for (int ctr = 0; ctr < Int32.Parse(poblacionNumero); ctr++)
+            while (poblacion.Count < Int32.Parse(poblacionNumero))
             {
-                decimal numerogenerado = (decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
-                Console.Write("Numero aletorio generado: {0,8:N6}\n", numerogenerado);
-                int count = BitConverter.GetBytes(decimal.GetBits(numerogenerado)[3])[2];
-                string str = numerogenerado.ToString();
-                List<string> resultados = new List<string>();
-                resultados = dividircadena(str, count + 1);
-
-                String primerconversion = enteroabinario(resultados[0]);
-                decimal conprimerconversion= Convert.ToDecimal(primerconversion);
-                string fmt = "000000";
-                primerconversion = conprimerconversion.ToString(fmt);
-                String segundaconversion = DecimalBinarioaBinario(resultados[1]);
-                String numerocompletobinario = primerconversion + "." + segundaconversion;
-                poblacionBinaria.Add(numerocompletobinario);
-
-                String entero = numerocompletobinario.Substring(0, numerocompletobinario.IndexOf("."));
-                String flotante = numerocompletobinario.Substring(numerocompletobinario.IndexOf(".") + 1, numerocompletobinario.Length - numerocompletobinario.IndexOf(".") - 1);
-                
-                int enterooo = BinarioAentero(entero);
-                float partedecimal = BinarioADecimalFlotante(flotante);
-                decimal resultado = concatenacion(enterooo.ToString(), partedecimal.ToString());
-                poblacion.Add(resultado);                
+                decimal numeroAleatorio = (decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
+                string numeroAleatorioString = numeroAleatorio.ToString();
+                int count = BitConverter.GetBytes(decimal.GetBits(numeroAleatorio)[3])[2];
+                if (!poblacion.Contains(numeroAleatorio))
+                {
+                    poblacion.Add(numeroAleatorio);
+                    poblacionPunto.Add((numeroAleatorioString.Length-1)- count);
+                }
             }
-            Console.WriteLine("____________________________\n");
-
-            Console.WriteLine("Imprimiendo Poblacion binaria con punto:");
-            foreach (string contenido in poblacionBinaria)
-            {
-                Console.WriteLine("{0}", contenido);
-            }
-            Console.WriteLine("____________________________\n");
-                     
+            Console.WriteLine("____________________________\n");                     
             Console.WriteLine("Imprimiendo Poblacion en decimal:");
              foreach (float contenido in poblacion)
              {
                  Console.WriteLine("{0}", contenido.ToString());
              }
-            Console.WriteLine("____________________________\n");            
+            Console.WriteLine("____________________________\n");
 
+            List<decimal> ResultadosFX= fx(inversion, FNE, VS, poblacion, periodo);
+            decimal SumatorioaFx = fxSumatoria(ResultadosFX);
+            List<int> torneo1 = posTorneo(poblacion.Count,0, poblacion.Count/2);
+            List<int> torneo2 = posTorneo(poblacion.Count,poblacion.Count/2, poblacion.Count);
             Console.WriteLine("Evaluando");
-            Evaluacion(inversion, FNE, VS, poblacion, periodo);
+            //Evaluacion(inversion, FNE, VS, poblacion, periodo);
             Console.ReadKey();
 
-        }
-
-        static int BinarioAentero(String input)
-        {
-            char[] array = input.ToCharArray();
-            Array.Reverse(array);
-            int sum = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == '1')
-                {
-                    sum += (int)Math.Pow(2, i);
-                }
-            }
-            return sum;
-        }
-
-        static string enteroabinario(String cadena)
-        {
-            int Num = Convert.ToInt32(cadena);
-            String cad = "";
-            if (Num > 0)
-            {
-                while (Num > 0)
-                {
-                    if (Num % 2 == 0)
-                    {
-                        cad = "0" + cad;
-                    }
-                    else
-                    {
-                        cad = "1" + cad;
-                    }
-                    Num = (int)(Num / 2);
-                }
-            }
-            return cad;
-        }
-
-        static float BinarioADecimalFlotante(String input)
-        {
-            float[] arrayBase = new float[] { 0.5F, 0.25F, 0.125F, 0.0625F, 0.03125F, 0.015625F, 0.0078125F, 0.00390625F, 0.001953125F, 0.0009765625F, 0.00048828125F,0.000244140625F, 0.0001220703125F, 0.00006103515625F, 0.000030517578125F};
-            char[] array = input.ToCharArray();
-            //Array.Reverse(array);
-            float sum = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == '1')
-                {
-                    sum = sum + arrayBase[i];
-                }
-            }
-            return sum;
-        }
-
-       static string DecimalBinarioaBinario(string valor)
-        {
-            double valfloat = Convert.ToDouble(valor);
-            valfloat = valfloat * 2;
-            List<string> binariofraccion = new List<string>();
-            double salida = 0;
-            int contador = 0;
-            do
-            {
-                List<string> resultados = new List<string>();
-                int count = BitConverter.GetBytes(decimal.GetBits((decimal)valfloat)[3])[2];
-                resultados = dividircadena(Convert.ToString(valfloat), count + 1);
-                binariofraccion.Add(resultados[0]);
-                salida = Convert.ToDouble(resultados[1]);
-                valfloat = Convert.ToDouble(resultados[1]) * 2;
-                contador++;
-                if (contador == 12)
-                {
-                    break;
-                }
-            } while (salida != 0);
-            return convertirstring(binariofraccion);
-        }
-
-
-        static decimal concatenacion(String input, String input2)
-        {
-            char[] array = input2.ToCharArray();
-            String parcial = "";
-            int pos = 0;
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (array[i] == '.')
-                {
-                    pos = i;
-                }
-            }
-            for (int j = pos; j < array.Length; j++)
-            {
-                parcial = parcial + array[j];
-            }
-            String resultado = input + parcial;
-            return Convert.ToDecimal(resultado); ;
         }
 
         static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
@@ -237,10 +120,44 @@ namespace Tesis_Algoritmo_Genetico
             return x0;
         }
 
-        static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
+        static List<decimal> fx(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
         {
             List<decimal> ResultadosFX = new List<decimal>();
-            List<decimal> ProbabilidadSeleccion = new List<decimal>();
+            decimal valorFX = 0;
+            foreach (decimal contenido in poblacion)
+            {
+                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
+                ResultadosFX.Add(valorFX);
+            }
+            return ResultadosFX;
+        }
+
+        static decimal fxSumatoria(List<decimal> ResultadosFx)
+        {
+            decimal SumatoriaFx = 0;
+            foreach (decimal contenido in ResultadosFx)
+            {
+                SumatoriaFx = SumatoriaFx + contenido;
+            }
+            return SumatoriaFx;
+        }
+
+        static List<int> posTorneo(int poblacionT,int inicio, int tamañopoblacion)
+        {
+            var torneo = new List<int>();
+            while (torneo.Count < (poblacionT/2))
+            {
+                int numeroAleatorio = new Random().Next(inicio,tamañopoblacion);
+                if (!torneo.Contains(numeroAleatorio))
+                {
+                    torneo.Add(numeroAleatorio);
+                }
+            }
+            return torneo;
+        }
+            static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
+            {
+            List<decimal> ResultadosFX = new List<decimal>();
             decimal SumatorioaFx=0;
             decimal valorFX=0;
             foreach (decimal contenido in poblacion)
@@ -249,16 +166,6 @@ namespace Tesis_Algoritmo_Genetico
                 ResultadosFX.Add(valorFX);
                 SumatorioaFx = SumatorioaFx + valorFX;
             }
-            /*List<decimal> Resultadoajustado = Reajuste(Resultado);
-            foreach (decimal contenido in Resultado)
-            {
-                SumatorioaFx = SumatorioaFx + contenido;
-            }  */        
-            
-           /* foreach (decimal contenido in Resultado)
-            {
-                ProbabilidadSeleccion.Add((contenido/SumatorioaFx)*100);
-            }*/
 
             List<decimal> reorganizacionPos = ResultadosFX.Where(x => x > 0).ToList();
             decimal valorPositivo = reorganizacionPos.Min(x => x);
@@ -269,10 +176,10 @@ namespace Tesis_Algoritmo_Genetico
             int indexNegativo = reorganizacionNega.FindIndex(x => x == valorNegativo);
 
 
-            var torneo1 = new List<int>();
-            while (torneo1.Count < 10)
+           /* var torneo1 = new List<int>();
+            while (torneo1.Count < (poblacion.Count/2))
             {
-                int numeroAleatorio = new Random().Next(0, 10);
+                int numeroAleatorio = new Random().Next(0, (poblacion.Count / 2));
                 if (!torneo1.Contains(numeroAleatorio))
                 {
                     torneo1.Add(numeroAleatorio);
@@ -280,50 +187,18 @@ namespace Tesis_Algoritmo_Genetico
             }
 
             var torneo2 = new List<int>();
-            while (torneo2.Count < 10)
+            while (torneo2.Count < (poblacion.Count / 2))
             {
-                int numeroAleatorio = new Random().Next(0, 10);
+                int numeroAleatorio = new Random().Next((poblacion.Count / 2), poblacion.Count);
                 if (!torneo2.Contains(numeroAleatorio))
                 {
                     torneo2.Add(numeroAleatorio);
                 }
-            }
-
-
-
-
+            }*/
             return 0;
         }
 
-        static List<decimal> Reajuste(List<decimal> resultado)
-        {
-            decimal mayor = 0;
-            decimal menor = 0;
-            int pos = 0;
-
-            for (int i = 0; i < resultado.Count; i++)
-            {                
-                if (resultado[i] > mayor)
-                {
-                    mayor = resultado[i];
-                    pos = i;
-                }
-                if (resultado[i] < menor)
-                {
-                    menor = resultado[i];
-                    pos = i;
-                }
-            }
-            ;
-            List<decimal> cadenas = new List<decimal>();
-            for (int i = 0; i < resultado.Count; i++)
-            {
-                cadenas.Add(resultado[i] + Math.Abs(menor));
-            }                
-            return cadenas;
-        }
-
-            public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
+        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
@@ -345,36 +220,6 @@ namespace Tesis_Algoritmo_Genetico
             FNEAcumulado = Convert.ToDecimal(str4);
             fVPN = FNEAcumulado - Inversion;
             return fVPN;
-        }
-        static List<string> dividircadena(string cadena, int tamano)
-        {
-            String cad1 = "";
-            String cad2 = "";
-            int pos = 0;
-            List<string> cadenas = new List<string>();
-            for (int i = 0; i < cadena.Length - 1; i++)
-            {
-                if (cadena[i] == '.')
-                {
-                    pos = i;
-                    break;
-                }
-            }
-            cad1 = cadena.Substring(0, pos);
-            cad2 = cadena.Substring(pos, tamano);
-            cadenas.Add(cad1);
-            cadenas.Add(cad2);
-            return cadenas;
-        }
-
-        static string convertirstring(List<string> valor)
-        {
-            String palabra = "";
-            foreach (string contenido in valor)
-            {
-                palabra = palabra + contenido;
-            }
-            return palabra;
-        }
+        }        
     }
 }
