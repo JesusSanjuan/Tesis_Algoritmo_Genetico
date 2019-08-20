@@ -68,8 +68,8 @@ namespace Tesis_Algoritmo_Genetico
             Random rand2 = new Random();            
             byte[] bytes2 = new byte[5];
             rand2.NextBytes(bytes2);
-            double lowerBound = (double) aproxInicial- 3;
-            double upperBound = (double )aproxInicial+ 1;      
+            double lowerBound = (double) aproxInicial- 5;
+            double upperBound = (double )aproxInicial+ 5;      
 
             List<decimal> poblacion = new List<decimal>();
             List<int> poblacionPunto = new List<int>();
@@ -92,15 +92,21 @@ namespace Tesis_Algoritmo_Genetico
                  Console.WriteLine("{0}", contenido.ToString());
              }
             Console.WriteLine("____________________________\n");
-
+            Console.WriteLine("Evaluando");
             List<decimal> ResultadosFX= fx(inversion, FNE, VS, poblacion, periodo);
             decimal SumatorioaFx = fxSumatoria(ResultadosFX);
             List<int> torneo1 = posTorneo(poblacion.Count,0, poblacion.Count/2);
             List<int> torneo2 = posTorneo(poblacion.Count,poblacion.Count/2, poblacion.Count);
-            Console.WriteLine("Evaluando");
-            //Evaluacion(inversion, FNE, VS, poblacion, periodo);
-            Console.ReadKey();
+            List<decimal> padre=Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
+            List<int> cruce1 = posTorneo(padre.Count, 0, padre.Count / 2);
+            List<int> cruce2 = posTorneo(padre.Count, padre.Count / 2, padre.Count);
+            List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+             cruce2.Reverse();
+            List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+            List<decimal> hijos_Generados=poblacionnueva1.Concat(poblacionnueva2).ToList();
+            List<decimal> Nueva_Generacion = padre.Concat(hijos_Generados).ToList();
+            Console.ReadKey();
         }
 
         static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
@@ -155,50 +161,114 @@ namespace Tesis_Algoritmo_Genetico
             }
             return torneo;
         }
-            static int Evaluacion(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
+        static List<decimal> Seleccion(List<int> p1, List<int> p2, List<decimal> ResultadosFX, List<decimal>poblacion)
+        {
+            List<decimal> padre = new List<decimal>();
+            List<decimal> padrefx = new List<decimal>();
+
+            for (int i = 0; i < p1.Count; i++)
             {
-            List<decimal> ResultadosFX = new List<decimal>();
-            decimal SumatorioaFx=0;
-            decimal valorFX=0;
-            foreach (decimal contenido in poblacion)
-            {
-                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);                
-                ResultadosFX.Add(valorFX);
-                SumatorioaFx = SumatorioaFx + valorFX;
-            }
+                decimal fx1 = ResultadosFX[p1[i]];
+                decimal fx2 = ResultadosFX[p2[i]];
 
-            List<decimal> reorganizacionPos = ResultadosFX.Where(x => x > 0).ToList();
-            decimal valorPositivo = reorganizacionPos.Min(x => x);
-            int indexPositivo = reorganizacionPos.FindIndex(x => x == valorPositivo);
+                decimal pob1 = poblacion[p1[i]];
+                decimal pob2 = poblacion[p2[i]];
 
-            List<decimal> reorganizacionNega = ResultadosFX.Where(x => x < 0).ToList();
-            decimal valorNegativo= reorganizacionNega.Max(x => x);
-            int indexNegativo = reorganizacionNega.FindIndex(x => x == valorNegativo);
+                List<decimal> tem = new List<decimal>();
+                tem.Add(fx1);
+                tem.Add(fx2);
 
+                
+                decimal ganador = 0;
+                int indexganadorPob = 0;
 
-           /* var torneo1 = new List<int>();
-            while (torneo1.Count < (poblacion.Count/2))
-            {
-                int numeroAleatorio = new Random().Next(0, (poblacion.Count / 2));
-                if (!torneo1.Contains(numeroAleatorio))
+                if (fx1 >= 0 && fx2 >= 0)
                 {
-                    torneo1.Add(numeroAleatorio);
+                    List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                    ganador = reorganizacionPos.Min(x => x);
+                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
                 }
-            }
-
-            var torneo2 = new List<int>();
-            while (torneo2.Count < (poblacion.Count / 2))
-            {
-                int numeroAleatorio = new Random().Next((poblacion.Count / 2), poblacion.Count);
-                if (!torneo2.Contains(numeroAleatorio))
+                else if (fx1 < -0 && fx2 < -0)
                 {
-                    torneo2.Add(numeroAleatorio);
+                    List<decimal> reorganizacionNega = tem.Where(x => x < 0).ToList();
+                    ganador = reorganizacionNega.Max(x => x);
+                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
                 }
-            }*/
-            return 0;
+                else
+                {
+                    decimal fx1p, fx2p;
+                    fx1p = Math.Abs(fx1);
+                    fx2p = Math.Abs(fx2);
+
+                    tem.Clear();
+
+                    tem.Add(fx1p);
+                    tem.Add(fx2p);
+
+                    if (fx1<-0)
+                    {                        
+
+                        List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        ganador = reorganizacionPos.Min(x => x);
+                        if (fx1p == ganador)
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx1);
+                            padrefx.Add(fx1);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                        else
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx2p);
+                            padrefx.Add(fx2);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+
+                    }
+                    else
+                    {
+                        List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        ganador = reorganizacionPos.Min(x => x);
+                        if (fx2p == ganador)
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx2);
+                            padrefx.Add(fx2);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                        else
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx1p);
+                            padrefx.Add(fx1);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+
+                    }                    
+                }  
+            }      
+            return padre;
         }
 
-        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
+
+        static List<decimal> Cruce(List<int> cruce1, List<int> cruce2,List<decimal> padre)
+        {
+            List<decimal> hijos= new List<decimal>();
+            for (int i = 0; i < cruce1.Count; i++)
+            {
+                decimal padre1 = padre[cruce1[i]];
+                decimal padre2 = padre[cruce2[i]];
+
+                decimal media = (padre1 + padre2) / 2;
+                //decimal media_geometrica = (decimal)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
+                decimal media_geometrica = (decimal)Math.Sqrt((double)(padre1*padre2));
+                hijos.Add(media);
+            }
+            return hijos;
+        }
+
+            public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
