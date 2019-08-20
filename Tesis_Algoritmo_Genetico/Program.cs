@@ -101,6 +101,10 @@ namespace Tesis_Algoritmo_Genetico
 
             List<int> cruce1 = posTorneo(padre.Count, 0, padre.Count / 2);
             List<int> cruce2 = posTorneo(padre.Count, padre.Count / 2, padre.Count);
+
+            List<int> crucetotal = cruce1.Concat(cruce2).ToList();
+            int pos=Impar(crucetotal);//Auiq me quede analizando
+
             List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
              cruce2.Reverse();
             List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
@@ -267,6 +271,23 @@ namespace Tesis_Algoritmo_Genetico
             }
             return hijos;
         }
+
+        static int Impar(List<int> crucetotal)
+        {
+            int valorfaltante = -1; ;
+            for(int i=0; i<crucetotal.Count(); i++)
+            {
+
+                int pos = crucetotal.FindIndex(x => x == i);
+                if(pos==-1)
+                {
+                    valorfaltante = i;
+                    break;
+                }
+            }
+            return valorfaltante;
+        }
+
 
             public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
