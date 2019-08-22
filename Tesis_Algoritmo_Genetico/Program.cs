@@ -106,7 +106,7 @@ namespace Tesis_Algoritmo_Genetico
             int i = 0;
             do
             {
-                if(i==20)
+                if(i==60)
                 {
 
                 }
@@ -115,12 +115,12 @@ namespace Tesis_Algoritmo_Genetico
 
                 convergengiaiteracion = SumatorioaFxAnterior / SumatorioaFx;
 
-                List<int> torneo1 = posTorneo(poblacion.Count, 0, poblacion.Count / 2);
-                List<int> torneo2 = posTorneo(poblacion.Count, poblacion.Count / 2, poblacion.Count);
+                List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
+                List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
                 List<decimal> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
-                List<int> cruce1 = posTorneo(padre.Count, 0, padre.Count / 2);
-                List<int> cruce2 = posTorneo(padre.Count, padre.Count / 2, padre.Count);
+                List<int> cruce1 = posTorneo( 0, padre.Count / 2);
+                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);
 
                 List<int> crucetotal = cruce1.Concat(cruce2).ToList();
                 int pos = Impar(crucetotal, padre.Count);
@@ -154,7 +154,7 @@ namespace Tesis_Algoritmo_Genetico
                 SumatorioaFxAnterior = SumatorioaFx;
                 i = i + 1;
             } while (Convert.ToDecimal(convergencia) >= convergengiaiteracion);
-            Console.WriteLine("\nIteraciones Totales: {0}\n", i);
+            //Console.WriteLine("\nIteraciones Totales: {0}\n", i);
             Console.ReadKey();
         }
 
@@ -197,19 +197,33 @@ namespace Tesis_Algoritmo_Genetico
             return SumatoriaFx;
         }
 
-        static List<int> posTorneo(int poblacionT,int inicio, int tamañopoblacion)
+        static List<int> posTorneo( int inicio, int tamañopoblacion)
         {
             var torneo = new List<int>();
-            while (torneo.Count < (poblacionT/2))
+            var resultorneo = new List<int>();
+            for (int i=inicio;i<tamañopoblacion; i++)
             {
-                int numeroAleatorio = new Random().Next(inicio,tamañopoblacion);
-                if (!torneo.Contains(numeroAleatorio))
-                {
-                    torneo.Add(numeroAleatorio);
-                }
+                torneo.Add(i);
             }
-            return torneo;
+            resultorneo = DesordenarLista(torneo);
+            return resultorneo;
         }
+
+        public static List<T> DesordenarLista<T>(List<T> input)
+        {
+            List<T> arr = input;
+            List<T> arrDes = new List<T>();
+
+            Random randNum = new Random();
+            while (arr.Count > 0)
+            {
+                int val = randNum.Next(0, arr.Count - 1);
+                arrDes.Add(arr[val]);
+                arr.RemoveAt(val);
+            }
+            return arrDes;
+        }
+
         static List<decimal> Seleccion(List<int> p1, List<int> p2, List<decimal> ResultadosFX, List<decimal>poblacion)
         {
             List<decimal> padre = new List<decimal>();
@@ -340,8 +354,7 @@ namespace Tesis_Algoritmo_Genetico
             return valorfaltante;
         }
 
-
-            public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
+        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
