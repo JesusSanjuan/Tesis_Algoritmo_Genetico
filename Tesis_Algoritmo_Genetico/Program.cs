@@ -127,14 +127,30 @@ namespace Tesis_Algoritmo_Genetico
 
                 if (pos != -1)
                 {
-
+                    int numeroAleatorio;
+                    do
+                    {
+                        numeroAleatorio= new Random().Next(0, padre.Count);
+                    } while (numeroAleatorio == pos);
+                    List<decimal> hijoimpar = CruceImpar(padre[pos], padre[numeroAleatorio]);
+                    List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+                    cruce2.Reverse();
+                    List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+                    List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
+                    poblacion.Clear();
+                    poblacion = padre.Concat(hijos_Generados).ToList();
+                    poblacion = poblacion.Concat(hijoimpar).ToList();
                 }
-                List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
-                cruce2.Reverse();
-                List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
-                poblacion.Clear();
-                poblacion = padre.Concat(hijos_Generados).ToList();
+                else
+                {
+                    List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+                    cruce2.Reverse();
+                    List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+                    List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
+                    poblacion.Clear();
+                    poblacion = padre.Concat(hijos_Generados).ToList();
+                    
+                }
                 SumatorioaFxAnterior = SumatorioaFx;
                 i = i + 1;
             } while (Convert.ToDecimal(convergencia) >= convergengiaiteracion);
@@ -295,9 +311,17 @@ namespace Tesis_Algoritmo_Genetico
 
                 decimal media = (padre1 + padre2) / 2;
                 //decimal media_geometrica = (decimal)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
-                decimal media_geometrica = (decimal)Math.Sqrt((double)(padre1*padre2));
+                //decimal media_geometrica = (decimal)Math.Sqrt((double)(padre1*padre2));
                 hijos.Add(media);
             }
+            return hijos;
+        }
+
+        static List<decimal> CruceImpar(decimal padre1, decimal padre2)
+        {
+            List<decimal> hijos = new List<decimal>(); 
+            decimal media = (padre1 + padre2) / 2;
+            hijos.Add(media);
             return hijos;
         }
 
