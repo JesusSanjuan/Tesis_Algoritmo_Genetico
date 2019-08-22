@@ -62,9 +62,9 @@ namespace Tesis_Algoritmo_Genetico
             String generaciones;
             generaciones = Console.ReadLine();*/
             
-            Console.WriteLine("Introduzca la convergencia:  ");
+            /*Console.WriteLine("Introduzca la convergencia:  ");
             String convergencia;
-            convergencia = Console.ReadLine();
+            convergencia = Console.ReadLine();*/
 
             Console.WriteLine("\n\nBuscando aproximacion inicial..");
             decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
@@ -101,8 +101,8 @@ namespace Tesis_Algoritmo_Genetico
              }*/
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Evaluando");
-            decimal convergengiaiteracion = 0;
-            decimal SumatorioaFxAnterior = 0;
+            //decimal convergengiaiteracion = 0;
+            //decimal SumatorioaFxAnterior = 0;
             int i = 0;
             do
             {
@@ -111,49 +111,45 @@ namespace Tesis_Algoritmo_Genetico
 
                 }
                 List<decimal> ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
-                decimal SumatorioaFx = fxSumatoria(ResultadosFX);
+               // decimal SumatorioaFx = fxSumatoria(ResultadosFX);
 
-                convergengiaiteracion = SumatorioaFxAnterior / SumatorioaFx;
+                //convergengiaiteracion = SumatorioaFxAnterior / SumatorioaFx;
 
                 List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
                 List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
                 List<decimal> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
                 List<int> cruce1 = posTorneo( 0, padre.Count / 2);
-                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);
+                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);               
+                
+                List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+                cruce1 = DesordenarLista(cruce1);
+                cruce2 = DesordenarLista(cruce2);
+                List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+                List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
+                poblacion.Clear();
+                poblacion = padre.Concat(hijos_Generados).ToList();
 
-                List<int> crucetotal = cruce1.Concat(cruce2).ToList();
-                int pos = Impar(crucetotal, padre.Count);
-
-                if (pos != -1)
+                if (cruce1.Count() != cruce2.Count())
                 {
-                    int numeroAleatorio;
-                    do
-                    {
-                        numeroAleatorio= new Random().Next(0, padre.Count);
-                    } while (numeroAleatorio == pos);
-                    List<decimal> hijoimpar = CruceImpar(padre[pos], padre[numeroAleatorio]);
-                    List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
-                    cruce2.Reverse();
-                    List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                    List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
-                    poblacion.Clear();
-                    poblacion = padre.Concat(hijos_Generados).ToList();
+                    int numeroAleatorio = new Random().Next(0, padre.Count / 2);
+                    int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
+                    List<decimal> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
                     poblacion = poblacion.Concat(hijoimpar).ToList();
                 }
-                else
-                {
-                    List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
-                    cruce2.Reverse();
-                    List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                    List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
-                    poblacion.Clear();
-                    poblacion = padre.Concat(hijos_Generados).ToList();
-                    
-                }
-                SumatorioaFxAnterior = SumatorioaFx;
+                
+
+                //Agrupamos la lista
+                var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+
+                //Imprimimos la lista agrupada
+                agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
+                Console.WriteLine("____________________________\n");
+
+
+               // SumatorioaFxAnterior = SumatorioaFx;
                 i = i + 1;
-            } while (Convert.ToDecimal(convergencia) >= convergengiaiteracion);
+            } while (0 >= -1);
             //Console.WriteLine("\nIteraciones Totales: {0}\n", i);
             Console.ReadKey();
         }
@@ -307,7 +303,6 @@ namespace Tesis_Algoritmo_Genetico
                             padrefx.Add(fx1);
                             padre.Add(poblacion[indexganadorPob]);
                         }
-
                     }                    
                 }  
             }      
