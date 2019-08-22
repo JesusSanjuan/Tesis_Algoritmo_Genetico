@@ -106,7 +106,7 @@ namespace Tesis_Algoritmo_Genetico
             int i = 0;
             do
             {
-                if(i==60)
+                if(i==65)
                 {
 
                 }
@@ -136,8 +136,7 @@ namespace Tesis_Algoritmo_Genetico
                     int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
                     List<decimal> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
                     poblacion = poblacion.Concat(hijoimpar).ToList();
-                }
-                
+                }               
 
                 //Agrupamos la lista
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
@@ -150,8 +149,6 @@ namespace Tesis_Algoritmo_Genetico
                // SumatorioaFxAnterior = SumatorioaFx;
                 i = i + 1;
             } while (0 >= -1);
-            //Console.WriteLine("\nIteraciones Totales: {0}\n", i);
-            Console.ReadKey();
         }
 
         static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
