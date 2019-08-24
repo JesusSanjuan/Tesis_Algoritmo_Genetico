@@ -105,11 +105,7 @@ namespace Tesis_Algoritmo_Genetico
             //decimal SumatorioaFxAnterior = 0;
             int i = 0;
             do
-            {
-                if(i==65)
-                {
-
-                }
+            {                
                 List<decimal> ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
                // decimal SumatorioaFx = fxSumatoria(ResultadosFX);
 
@@ -140,6 +136,13 @@ namespace Tesis_Algoritmo_Genetico
 
                 //Agrupamos la lista
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+
+                if (i == 3)
+                {
+
+                }
+
+                var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
 
                 //Imprimimos la lista agrupada
                 agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
