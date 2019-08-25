@@ -19,7 +19,7 @@ namespace Tesis_Algoritmo_Genetico
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el periodo (N) Meses: ");
             per = Console.ReadLine();
-            Console.WriteLine("Introduzca la valor de salvamento: ");
+            Console.WriteLine("Introduzca el valor de salvamento: ");
             vss = Console.ReadLine();
             //Console.WriteLine("Introduzca el VPN posible: ");
             //vpn = Console.ReadLine();
@@ -69,8 +69,7 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("\n\nBuscando aproximacion inicial..");
             decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
-            Console.WriteLine("____________________________\n");
-            Console.WriteLine("Generandos numeros aleatorios -3 y +1 entorno a la aproximacion incial\n");
+            Console.WriteLine("Generandos numeros aleatorios -5 y +5 entorno a la aproximacion incial\n");
 
             // Generate and display 5 random byte (integer) values.
             Random rand2 = new Random();            
@@ -93,23 +92,23 @@ namespace Tesis_Algoritmo_Genetico
                     //poblacionPunto.Add((numeroAleatorioString.Length-1)- count);
                 }
             }
-            /*Console.WriteLine("____________________________\n");                     
-            Console.WriteLine("Imprimiendo Poblacion en decimal:");
+            Console.WriteLine("____________________________\n");                     
+            Console.WriteLine("Imprimiendo Poblacion inicial:");
              foreach (float contenido in poblacion)
              {
                  Console.WriteLine("{0}", contenido.ToString());
-             }*/
+             }
             Console.WriteLine("____________________________\n");
-            Console.WriteLine("Evaluando");
-            //decimal convergengiaiteracion = 0;
-            //decimal SumatorioaFxAnterior = 0;
-            int i = 0;
+            Console.WriteLine("Evaluando, Buscando convergencia del 95%");
+            Console.WriteLine("____________________________\n\n\n");
+
+            int i = 1;
+            decimal porcentajeconvergencia = 0;
+            decimal porcentaje = 100 / Int32.Parse(poblacionNumero);
+
             do
             {                
                 List<decimal> ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
-               // decimal SumatorioaFx = fxSumatoria(ResultadosFX);
-
-                //convergengiaiteracion = SumatorioaFxAnterior / SumatorioaFx;
 
                 List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
                 List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
@@ -135,24 +134,44 @@ namespace Tesis_Algoritmo_Genetico
                 }               
 
                 //Agrupamos la lista
-                var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+                //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();                
 
-                if (i == 3)
+                //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
+                var agrupacion = poblacion.GroupBy(x => x).Select(g =>  g.Count() ).ToList();
+                var agrupacion2= agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+                var agrupacion3 = agrupacion.GroupBy(x => x).Select(g =>  g.Key).ToList();
+                var valormax = agrupacion3.Max();
+                if (i == 80)
                 {
 
                 }
-
-                var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
-
+                foreach (var el in agrupacion2)
+                {
+                    if(el.Count ==1 && el.Text==valormax)
+                    {
+                        decimal valor = Convert.ToDecimal(el.Text);                        
+                        porcentajeconvergencia = porcentaje * valor;
+                        
+                        Console.WriteLine("\t****************************\n");
+                        Console.WriteLine("\tIteracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
+                        break;
+                    }
+                }                  
                 //Imprimimos la lista agrupada
-                agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
-                Console.WriteLine("____________________________\n");
-
-
-               // SumatorioaFxAnterior = SumatorioaFx;
+                //agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
                 i = i + 1;
-            } while (0 >= -1);
+            } while (porcentajeconvergencia <= 95);
+
+            Console.WriteLine("____________________________\n");
+            Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
+            foreach (float contenido in poblacion)
+            {
+                Console.WriteLine("{0}", contenido.ToString());
+            }
+            Console.ReadKey();
         }
+
+
 
         static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
         {
@@ -308,7 +327,6 @@ namespace Tesis_Algoritmo_Genetico
             }      
             return padre;
         }
-
 
         static List<decimal> Cruce(List<int> cruce1, List<int> cruce2,List<decimal> padre)
         {
