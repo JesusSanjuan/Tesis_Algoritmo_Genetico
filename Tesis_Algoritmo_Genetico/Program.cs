@@ -29,12 +29,12 @@ namespace Tesis_Algoritmo_Genetico
             byte[] bytes = new byte[5];
             rand0.NextBytes(bytes);
 
-            FNE[0] = 40000;
-            FNE[1] = 50000;
-            FNE[2] = 65000;
-            FNE[3] = 35000;
-            FNE[4] = 40000;
-            FNE[5] = 2000;
+            FNE[0] = 400;
+            FNE[1] = 500;
+            FNE[2] = 650;
+            FNE[3] = 350;
+            FNE[4] = 400;
+            FNE[5] = 200;
 
             /*for (int x = 0; x < Convert.ToInt32(per); x++)
             {
@@ -75,8 +75,8 @@ namespace Tesis_Algoritmo_Genetico
             Random rand2 = new Random();            
             byte[] bytes2 = new byte[5];
             rand2.NextBytes(bytes2);
-            double lowerBound = (double) aproxInicial- 5;
-            double upperBound = (double )aproxInicial+ 5;      
+            double lowerBound = (double) aproxInicial- 80;
+            double upperBound = (double )aproxInicial+ 80;      
 
             List<decimal> poblacion = new List<decimal>();
             //List<int> poblacionPunto = new List<int>();
@@ -105,10 +105,10 @@ namespace Tesis_Algoritmo_Genetico
             int i = 1;
             decimal porcentajeconvergencia = 0;
             decimal porcentaje = Convert.ToDecimal(100) / Convert.ToDecimal(poblacionNumero);
-
+            List<decimal> ResultadosFX;
             do
             {                
-                List<decimal> ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
+                ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
 
                 List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
                 List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
@@ -141,10 +141,7 @@ namespace Tesis_Algoritmo_Genetico
                 var agrupacion2= agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
                 var agrupacion3 = agrupacion.GroupBy(x => x).Select(g =>  g.Key).ToList();
                 var valormax = agrupacion3.Max();
-                if (i == 80)
-                {
-
-                }
+               
                 foreach (var el in agrupacion2)
                 {
                     if(el.Count ==1 && el.Text==valormax)
@@ -156,17 +153,28 @@ namespace Tesis_Algoritmo_Genetico
                         Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
                         break;
                     }
-                }                  
+                }
+
                 //Imprimimos la lista agrupada
                 //agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
-                i = i + 1;
-            } while (porcentajeconvergencia <= Convert.ToDecimal(95));
+                if (i == 35)
+                {
+
+                }
+                i = i + 1;                
+            } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(95));
 
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
-            foreach (float contenido in poblacion)
+            foreach (decimal contenido in poblacion)
             {
-                Console.WriteLine("{0}", contenido.ToString());
+                Console.WriteLine("\t{0}", contenido.ToString());
+            }
+            Console.WriteLine("____________________________\n");
+            Console.WriteLine("Imprimiendo la ResultadoFX de la generacion {0} final: ", i);
+            foreach (decimal contenido in ResultadosFX)
+            {
+                Console.WriteLine("\t{0}", contenido.ToString());
             }
             Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");
             Console.ReadKey();
