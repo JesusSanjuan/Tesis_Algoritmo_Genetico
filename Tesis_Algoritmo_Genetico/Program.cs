@@ -29,12 +29,12 @@ namespace Tesis_Algoritmo_Genetico
             byte[] bytes = new byte[5];
             rand0.NextBytes(bytes);
 
-            FNE[0] = 15000;
-            FNE[1] = 15000;
-            FNE[2] = 15000;
-            FNE[3] = 15000;
-            FNE[4] = 15000;
-            //FNE[5] = 200;
+            FNE[0] = 40000;
+            FNE[1] = 50000;
+            FNE[2] = 65000;
+            FNE[3] = 35000;
+            FNE[4] = 40000;
+            FNE[5] = 2000;
 
             /*for (int x = 0; x < Convert.ToInt32(per); x++)
             {
@@ -54,7 +54,7 @@ namespace Tesis_Algoritmo_Genetico
             //VPN = Convert.ToDecimal(vpn);
             /*Lectura de informacion de datos de VPN*/
 
-            Console.WriteLine("Introduzca la cantidad de la problacion (Numeros pares):  ");
+            Console.WriteLine("Introduzca la cantidad de la poblacion (Numeros pares):  ");
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
@@ -101,10 +101,10 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Evaluando, Buscando convergencia del 95%");
             Console.WriteLine("____________________________\n\n\n");
-
+            Console.ReadKey();
             int i = 1;
             decimal porcentajeconvergencia = 0;
-            decimal porcentaje = 100 / Int32.Parse(poblacionNumero);
+            decimal porcentaje = Convert.ToDecimal(100) / Convert.ToDecimal(poblacionNumero);
 
             do
             {                
@@ -153,14 +153,14 @@ namespace Tesis_Algoritmo_Genetico
                         porcentajeconvergencia = porcentaje * valor;
                         
                         Console.WriteLine("\t****************************\n");
-                        Console.WriteLine("\tIteracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
+                        Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
                         break;
                     }
                 }                  
                 //Imprimimos la lista agrupada
                 //agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
                 i = i + 1;
-            } while (porcentajeconvergencia <= 95);
+            } while (porcentajeconvergencia <= Convert.ToDecimal(95));
 
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
@@ -168,6 +168,7 @@ namespace Tesis_Algoritmo_Genetico
             {
                 Console.WriteLine("{0}", contenido.ToString());
             }
+            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");
             Console.ReadKey();
         }
 
