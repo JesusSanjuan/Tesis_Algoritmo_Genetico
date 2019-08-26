@@ -29,7 +29,11 @@ namespace Tesis_Algoritmo_Genetico
 
 
             decimal[] FNE = new decimal[Convert.ToInt32(per)];
-            Random rand = new Random();
+            FNE[0] = 1000;
+            FNE[1] = 2000;
+            FNE[2] = 1500;
+            FNE[3] = 3000;
+            /*Random rand = new Random();
             byte[] bytes = new byte[5];
             rand.NextBytes(bytes);
             
@@ -41,7 +45,7 @@ namespace Tesis_Algoritmo_Genetico
                 //  String temporal= Console.ReadLine();
                 FNE[x] = Convert.ToDecimal(numeroaleatorio);
                 Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x+1,numeroaleatorio.ToString());
-            }
+            }*/
             inversion = Convert.ToDecimal(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDecimal(vss);
