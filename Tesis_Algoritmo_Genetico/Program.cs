@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 
 
@@ -48,7 +49,7 @@ namespace Tesis_Algoritmo_Genetico
 
             Console.ReadKey();
             Console.Write("\n\n\n\n\nCorre tiempo calculando\n\n\n\n\n");
-            DateTime tiempo1 = DateTime.Now;            
+            Stopwatch tiempo = Stopwatch.StartNew();
             ResultadoVPN = CalcularVPN(inversion, FNE, VS, VPN / 100, periodo);
             Console.Write("\n\n RESULTADO DE VPN: {0} \n\n", ResultadoVPN.ToString("0,0.0000"));
             Console.ReadKey();
@@ -62,9 +63,17 @@ namespace Tesis_Algoritmo_Genetico
             }
             ResultadoTIR = ResultadoTIR * 100;
             Console.Write("\n\n RESULTADO DE TIR: {0} ", ResultadoTIR.ToString());
-            DateTime tiempo2 = DateTime.Now;
-            TimeSpan total = new TimeSpan(tiempo2.Ticks - tiempo1.Ticks);
-            Console.Write("\n\n\n\n TIEMPO TOTAL DE EJECUCION: {0} ", total.ToString());          
+            if (Stopwatch.IsHighResolution)
+            {
+                Console.WriteLine("Alta precisión");
+            }
+            else
+            {
+                Console.WriteLine("Baja precisión");
+            }
+
+            Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
+            Console.WriteLine($"Precision: {(1.0 / Stopwatch.Frequency).ToString("E")} segundos");
             Console.ReadKey();
         }
 
