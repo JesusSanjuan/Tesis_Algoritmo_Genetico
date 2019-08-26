@@ -193,8 +193,6 @@ namespace Tesis_Algoritmo_Genetico
             Console.ReadKey();
         }
 
-
-
         static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
         {
             decimal resultado, sumasuperior=0, sumainferior=0;
@@ -223,17 +221,7 @@ namespace Tesis_Algoritmo_Genetico
             }
             return ResultadosFX;
         }
-
-        static decimal fxSumatoria(List<decimal> ResultadosFx)
-        {
-            decimal SumatoriaFx = 0;
-            foreach (decimal contenido in ResultadosFx)
-            {
-                SumatoriaFx = SumatoriaFx + contenido;
-            }
-            return SumatoriaFx;
-        }
-
+        
         static List<int> posTorneo( int inicio, int tamañopoblacion)
         {
             var torneo = new List<int>();
