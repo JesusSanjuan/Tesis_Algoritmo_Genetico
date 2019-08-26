@@ -178,6 +178,7 @@ namespace Tesis_Algoritmo_Genetico
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
             }*/
+            Console.WriteLine("\t\t RESULTADO TIR: {0}", poblacion[0]);
             Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");            
             if (Stopwatch.IsHighResolution)
             {
