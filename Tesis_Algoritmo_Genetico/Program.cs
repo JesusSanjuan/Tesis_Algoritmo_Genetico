@@ -149,7 +149,7 @@ namespace Tesis_Algoritmo_Genetico
                     }
                 }
                 i = i + 1;              
-            } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(95));
+            } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(98));
             tiempo.Stop();
             Console.WriteLine("____________________________\n");
             /*Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
@@ -163,7 +163,8 @@ namespace Tesis_Algoritmo_Genetico
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
             }*/
-            Console.WriteLine("\t\t RESULTADO TIR: {0}", poblacion[0]);
+            Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", ResultadosFX[0]);
+            Console.WriteLine("\n\t\t RESULTADO TIR: {0}", poblacion[0]);
             Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");            
             if (Stopwatch.IsHighResolution)
             {
