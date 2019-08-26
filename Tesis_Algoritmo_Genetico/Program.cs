@@ -14,7 +14,7 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            String inve, per, vss,vpn;
+            String inve, per, vss;
             decimal inversion, VS, VPN, ResultadoVPN, ResultadoTIR;
             int periodo;
             Console.WriteLine("Introduzca la inversion (P): ");
@@ -23,10 +23,6 @@ namespace Tesis_Algoritmo_Genetico
             per= Console.ReadLine();
             Console.WriteLine("Introduzca la valor de salvamento: ");
             vss = Console.ReadLine();
-            Console.WriteLine("Introduzca el VPN posible: ");
-            vpn = Console.ReadLine();           
-
-
 
             decimal[] FNE = new decimal[Convert.ToInt32(per)];
             FNE[0] = 1000;
@@ -49,7 +45,8 @@ namespace Tesis_Algoritmo_Genetico
             inversion = Convert.ToDecimal(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDecimal(vss);
-            VPN = Convert.ToDecimal(vpn);
+
+            VPN = aproximacioninicial(inversion, FNE, periodo);
 
             Console.ReadKey();
             Console.Write("\n\n\n\n\nCorre tiempo calculando\n\n\n\n\n");
@@ -169,6 +166,23 @@ namespace Tesis_Algoritmo_Genetico
                 Console.WriteLine("A sobre pasado el tamaño del decimal Exception: {0} > {1}.", e, decimal.MaxValue);
             }*/
             return fVPN;
+        }
+
+        static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
+        {
+            decimal resultado, sumasuperior = 0, sumainferior = 0;
+            for (int i = 0; i < FNE.Length; i++)
+            {
+                decimal t = (FNE[i] * (i + 1));
+                sumasuperior = sumasuperior + t;
+                sumainferior = sumainferior + FNE[i];
+            }
+            resultado = sumasuperior / sumainferior;
+
+            decimal x0;
+            x0 = (decimal)Math.Pow((double)(sumainferior / Inversion), (double)(1 / resultado));
+            x0 = (x0 - 1) * 100;
+            return x0;
         }
     }
 }
