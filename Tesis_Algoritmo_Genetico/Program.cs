@@ -26,28 +26,27 @@ namespace Tesis_Algoritmo_Genetico
             //vpn = Console.ReadLine();
 
             decimal[] FNE = new decimal[Convert.ToInt32(per)];
-            Random rand0 = new Random();
+            /*Random rand0 = new Random();
             byte[] bytes = new byte[5];
-            rand0.NextBytes(bytes);
+            rand0.NextBytes(bytes);*/
 
-            FNE[0] = 1000;
-            FNE[1] = 2000;
-            FNE[2] = 1500;
-            FNE[3] = 3000;
+            //FNE[0] = 1000;
+            //FNE[1] = 2000;
+            //FNE[2] = 1500;
+            //FNE[3] = 3000;
             //FNE[4] = 400;
             //FNE[5] = 200;
 
-            /*for (int x = 0; x < Convert.ToInt32(per); x++)
+            for (int x = 0; x < Convert.ToInt32(per); x++)
             {
                 /*Double numeroaleatorio = rand0.NextDouble() * 950000;
-                numeroaleatorio = Math.Round(numeroaleatorio, 4);
-                // Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
-                //  String temporal= Console.ReadLine();
-                FNE[x] = Convert.ToDecimal(numeroaleatorio);*/
-                //FNE[x] = 15000;
-                
+                numeroaleatorio = Math.Round(numeroaleatorio, 4);*/
+                Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
+                String temporal= Console.ReadLine();
+                FNE[x] = Convert.ToDecimal(temporal);
+                //FNE[x] = 15000;                
                 //Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x + 1, numeroaleatorio.ToString());
-          //  }*/
+            }
 
             inversion = Convert.ToDecimal(inve);
             periodo = Convert.ToInt32(per);
@@ -77,8 +76,8 @@ namespace Tesis_Algoritmo_Genetico
             Random rand2 = new Random();            
             byte[] bytes2 = new byte[5];
             rand2.NextBytes(bytes2);
-            double lowerBound = (double) aproxInicial- 80;
-            double upperBound = (double )aproxInicial+ 80;      
+            double lowerBound = (double) aproxInicial- 100;
+            double upperBound = (double )aproxInicial+ 100;      
 
             List<decimal> poblacion = new List<decimal>();
             //List<int> poblacionPunto = new List<int>();
@@ -375,41 +374,18 @@ namespace Tesis_Algoritmo_Genetico
             return hijos;
         }
 
-        static int Impar(List<int> crucetotal, int padre)
-        {
-            int valorfaltante = -1; ;
-            for(int i=0; i< padre; i++)
-            {
-                int pos = crucetotal.FindIndex(x => x == i);
-                if(pos==-1)
-                {
-                    valorfaltante = i;
-                    break;
-                }
-            }
-            return valorfaltante;
-        }
-
         public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
         {
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
-            decimal DivTMAR = 1M + TMAR;
+            decimal DivTMAR = 1 + TMAR;
             for (i = 1; i < Periodo; i++)
             {
-                decimal valorinferior = Decimal.Round((decimal)Math.Pow((double)DivTMAR, i), 10);
-                string str = valorinferior.ToString();
-                valorinferior = Convert.ToDecimal(str);
-                FNEAcumulado = Decimal.Round(FNEAcumulado + FNE[i - 1] / valorinferior, 10);
-                string str2 = FNEAcumulado.ToString();
-                FNEAcumulado = Convert.ToDecimal(str2);
+                decimal valorinferior = (decimal)Math.Pow((double)DivTMAR, i);
+                FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
             }
-            decimal valorinferiorF = Decimal.Round((decimal)Math.Pow((double)DivTMAR, i), 10);
-            string str3 = valorinferiorF.ToString();
-            valorinferiorF = Convert.ToDecimal(str3);
-            FNEAcumulado = Decimal.Round(FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF), 10);
-            string str4 = FNEAcumulado.ToString();
-            FNEAcumulado = Convert.ToDecimal(str4);
+            decimal valorinferiorF = (decimal)Math.Pow((double)DivTMAR, i);
+            FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
             fVPN = FNEAcumulado - Inversion;
             return fVPN;
         }        
