@@ -47,13 +47,12 @@ namespace Tesis_Algoritmo_Genetico
             VS = Convert.ToDecimal(vss);
 
             VPN = aproximacioninicial(inversion, FNE, periodo);
-
+            Console.WriteLine("\nAproximacion inicial es: {0}\n", VPN);
             Console.ReadKey();
             Console.Write("\n\n\n\n\nCorre tiempo calculando\n\n\n\n\n");
             Stopwatch tiempo = Stopwatch.StartNew();
             ResultadoVPN = CalcularVPN(inversion, FNE, VS, VPN / 100, periodo);
-            Console.Write("\n\n RESULTADO DE VPN: {0} \n\n", ResultadoVPN.ToString("0,0.0000"));
-            Console.ReadKey();
+            //Console.Write("\n\n RESULTADO DE VPN: {0} \n\n", ResultadoVPN.ToString("0,0.0000"));
             if (ResultadoVPN>0)
             {
                 ResultadoTIR=CalcularTIR(VPN/100, 1, inversion, FNE, VS, periodo);
@@ -63,7 +62,7 @@ namespace Tesis_Algoritmo_Genetico
                 ResultadoTIR=CalcularTIR(VPN/100, 2, inversion, FNE, VS, periodo);
             }
             ResultadoTIR = ResultadoTIR * 100;
-            Console.Write("\n\n RESULTADO DE TIR: {0} ", ResultadoTIR.ToString());
+            Console.Write("\n\n RESULTADO DE TIR: {0} \n", ResultadoTIR.ToString());
             if (Stopwatch.IsHighResolution)
             {
                 Console.WriteLine("Alta precisión");
