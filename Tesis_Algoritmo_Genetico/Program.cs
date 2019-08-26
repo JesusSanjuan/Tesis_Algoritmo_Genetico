@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-
-
 
 namespace Tesis_Algoritmo_Genetico
 {
@@ -20,48 +14,50 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("Introduzca la inversion (P): ");
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el perdio (N) Meses: ");
-            per= Console.ReadLine();
-            Console.WriteLine("Introduzca la valor de salvamento: ");
+            per = Console.ReadLine();
+            Console.WriteLine("Introduzca el valor de salvamento: ");
             vss = Console.ReadLine();
 
             decimal[] FNE = new decimal[Convert.ToInt32(per)];
-            FNE[0] = 1000;
+            /*FNE[0] = 1000;
             FNE[1] = 2000;
             FNE[2] = 1500;
             FNE[3] = 3000;
             /*Random rand = new Random();
             byte[] bytes = new byte[5];
-            rand.NextBytes(bytes);
-            
-            for (int x=0; x<Convert.ToInt32(per);x++)
+            rand.NextBytes(bytes);*/
+
+            for (int x = 0; x < Convert.ToInt32(per); x++)
             {
-                Double numeroaleatorio = rand.NextDouble() * 950000;
-                numeroaleatorio = Math.Round(numeroaleatorio, 4);
-                // Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
-                //  String temporal= Console.ReadLine();
-                FNE[x] = Convert.ToDecimal(numeroaleatorio);
-                Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x+1,numeroaleatorio.ToString());
-            }*/
+                /*Double numeroaleatorio = rand0.NextDouble() * 950000;
+                numeroaleatorio = Math.Round(numeroaleatorio, 4);*/
+                Console.WriteLine("\tIntroduzca el FNE {0}: ", x + 1);
+                String temporal = Console.ReadLine();
+                FNE[x] = Convert.ToDecimal(temporal);
+                //FNE[x] = 15000;                
+                //Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x + 1, numeroaleatorio.ToString());
+            }
             inversion = Convert.ToDecimal(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDecimal(vss);
 
-            VPN = aproximacioninicial(inversion, FNE, periodo);
-            Console.WriteLine("\nAproximacion inicial es: {0}\n", VPN);
-            Console.ReadKey();
+
             Console.Write("\n\n\n\n\nCorre tiempo calculando\n\n\n\n\n");
             Stopwatch tiempo = Stopwatch.StartNew();
+            VPN = aproximacioninicial(inversion, FNE, periodo);
+            Console.WriteLine("\nAproximacion inicial es: {0}\n", VPN);
             ResultadoVPN = CalcularVPN(inversion, FNE, VS, VPN / 100, periodo);
             //Console.Write("\n\n RESULTADO DE VPN: {0} \n\n", ResultadoVPN.ToString("0,0.0000"));
-            if (ResultadoVPN>0)
+            if (ResultadoVPN > 0)
             {
-                ResultadoTIR=CalcularTIR(VPN/100, 1, inversion, FNE, VS, periodo);
+                ResultadoTIR = CalcularTIR(VPN / 100, 1, inversion, FNE, VS, periodo);
             }
             else
             {
-                ResultadoTIR=CalcularTIR(VPN/100, 2, inversion, FNE, VS, periodo);
+                ResultadoTIR = CalcularTIR(VPN / 100, 2, inversion, FNE, VS, periodo);
             }
             ResultadoTIR = ResultadoTIR * 100;
+            tiempo.Stop();
             Console.Write("\n\n RESULTADO DE TIR: {0} \n", ResultadoTIR.ToString());
             if (Stopwatch.IsHighResolution)
             {
@@ -88,7 +84,7 @@ namespace Tesis_Algoritmo_Genetico
                 case 1:
                     do
                     {
-                        
+
                         Resultado = CalcularVPN(inversion, FNE, VdS, ValorTIRR, n);//Cabie aqui tenia hasta 10
                         Console.Write("1.---Ya es igual a 0? = {0} \n", Resultado);
                         if (MenosCero == true)
@@ -139,31 +135,23 @@ namespace Tesis_Algoritmo_Genetico
             //VAN
             decimal FNEAcumulado = 0, fVPN = 0;
             int i = 0;
-           /* try
-            {*/
-                decimal DivTMAR = 1M + TMAR;
-                for (i = 1; i < Periodo; i++)
-                {
-                    decimal valorinferior = Decimal.Round((decimal)Math.Pow((double)DivTMAR, i),10);
-                    string str = valorinferior.ToString();
-                    valorinferior= Convert.ToDecimal(str);
-                    FNEAcumulado = Decimal.Round(FNEAcumulado + FNE[i - 1] / valorinferior,10);
-                    string str2 = FNEAcumulado.ToString();
-                    FNEAcumulado = Convert.ToDecimal(str2); 
-                }
-                decimal valorinferiorF = Decimal.Round((decimal)Math.Pow((double)DivTMAR, i),10);
-                string str3 = valorinferiorF.ToString();
-                valorinferiorF = Convert.ToDecimal(str3);
-                FNEAcumulado = Decimal.Round(FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF),10);
-                string str4 = FNEAcumulado.ToString();
-                FNEAcumulado = Convert.ToDecimal(str4);
-                fVPN = FNEAcumulado - Inversion;                
-
-           /* }
-            catch (OverflowException e)
+            /* try
+             {*/
+            decimal DivTMAR = 1M + TMAR;
+            for (i = 1; i < Periodo; i++)
             {
-                Console.WriteLine("A sobre pasado el tamaño del decimal Exception: {0} > {1}.", e, decimal.MaxValue);
-            }*/
+                decimal valorinferior = (decimal)Math.Pow((double)DivTMAR, i);
+                FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
+            }
+            decimal valorinferiorF = (decimal)Math.Pow((double)DivTMAR, i);
+            FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
+            fVPN = FNEAcumulado - Inversion;
+
+            /* }
+             catch (OverflowException e)
+             {
+                 Console.WriteLine("A sobre pasado el tamaño del decimal Exception: {0} > {1}.", e, decimal.MaxValue);
+             }*/
             return fVPN;
         }
 
