@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 
 namespace Tesis_Algoritmo_Genetico
@@ -29,12 +30,12 @@ namespace Tesis_Algoritmo_Genetico
             byte[] bytes = new byte[5];
             rand0.NextBytes(bytes);
 
-            FNE[0] = 400;
-            FNE[1] = 500;
-            FNE[2] = 650;
-            FNE[3] = 350;
-            FNE[4] = 400;
-            FNE[5] = 200;
+            FNE[0] = 1000;
+            FNE[1] = 2000;
+            FNE[2] = 1500;
+            FNE[3] = 3000;
+            //FNE[4] = 400;
+            //FNE[5] = 200;
 
             /*for (int x = 0; x < Convert.ToInt32(per); x++)
             {
@@ -58,15 +59,16 @@ namespace Tesis_Algoritmo_Genetico
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
-            /*Console.WriteLine("Introduzca las generaciones a realizar:  ");
-            String generaciones;
-            generaciones = Console.ReadLine();*/
-            
             /*Console.WriteLine("Introduzca la convergencia:  ");
             String convergencia;
             convergencia = Console.ReadLine();*/
 
+           
+
             Console.WriteLine("\n\nBuscando aproximacion inicial..");
+
+            Stopwatch tiempo = Stopwatch.StartNew();
+
             decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
             Console.WriteLine("Generandos numeros aleatorios -5 y +5 entorno a la aproximacion incial\n");
@@ -92,7 +94,7 @@ namespace Tesis_Algoritmo_Genetico
                     //poblacionPunto.Add((numeroAleatorioString.Length-1)- count);
                 }
             }
-            Console.WriteLine("____________________________\n");                     
+           /* Console.WriteLine("____________________________\n");                     
             Console.WriteLine("Imprimiendo Poblacion inicial:");
              foreach (float contenido in poblacion)
              {
@@ -100,8 +102,8 @@ namespace Tesis_Algoritmo_Genetico
              }
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Evaluando, Buscando convergencia del 95%");
-            Console.WriteLine("____________________________\n\n\n");
-            Console.ReadKey();
+            Console.WriteLine("____________________________\n\n\n");*/
+            //Console.ReadKey();
             int i = 1;
             decimal porcentajeconvergencia = 0;
             decimal porcentaje = Convert.ToDecimal(100) / Convert.ToDecimal(poblacionNumero);
@@ -163,9 +165,9 @@ namespace Tesis_Algoritmo_Genetico
                 }
                 i = i + 1;                
             } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(95));
-
+            tiempo.Stop();
             Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
+            /*Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
             foreach (decimal contenido in poblacion)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
@@ -175,8 +177,19 @@ namespace Tesis_Algoritmo_Genetico
             foreach (decimal contenido in ResultadosFX)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
+            }*/
+            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");            
+            if (Stopwatch.IsHighResolution)
+            {
+                Console.WriteLine("Alta precisión");
             }
-            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");
+            else
+            {
+                Console.WriteLine("Baja precisión");
+            }
+            
+            Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
+            Console.WriteLine($"Precision: {(1.0 / Stopwatch.Frequency).ToString("E")} segundos");
             Console.ReadKey();
         }
 
