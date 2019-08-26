@@ -54,15 +54,13 @@ namespace Tesis_Algoritmo_Genetico
             //VPN = Convert.ToDecimal(vpn);
             /*Lectura de informacion de datos de VPN*/
 
-            Console.WriteLine("Introduzca la cantidad de la poblacion (Numeros pares):  ");
+            Console.WriteLine("\nIntroduzca la cantidad de la poblacion (Numeros pares):  ");
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
             /*Console.WriteLine("Introduzca la convergencia:  ");
             String convergencia;
-            convergencia = Console.ReadLine();*/
-
-           
+            convergencia = Console.ReadLine();*/          
 
             Console.WriteLine("\n\nBuscando aproximacion inicial..");
 
@@ -70,7 +68,7 @@ namespace Tesis_Algoritmo_Genetico
 
             decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
-            Console.WriteLine("Generandos numeros aleatorios -5 y +5 entorno a la aproximacion incial\n");
+            Console.WriteLine("Generandos numeros aleatorios -100 y +100 entorno a la aproximacion incial\n");
 
             // Generate and display 5 random byte (integer) values.
             Random rand2 = new Random();            
@@ -80,17 +78,13 @@ namespace Tesis_Algoritmo_Genetico
             double upperBound = (double )aproxInicial+ 100;      
 
             List<decimal> poblacion = new List<decimal>();
-            //List<int> poblacionPunto = new List<int>();
 
             while (poblacion.Count < Int32.Parse(poblacionNumero))
             {
                 decimal numeroAleatorio = (decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
-                string numeroAleatorioString = numeroAleatorio.ToString();
-                int count = BitConverter.GetBytes(decimal.GetBits(numeroAleatorio)[3])[2];
                 if (!poblacion.Contains(numeroAleatorio))
                 {
                     poblacion.Add(numeroAleatorio);
-                    //poblacionPunto.Add((numeroAleatorioString.Length-1)- count);
                 }
             }
            /* Console.WriteLine("____________________________\n");                     
@@ -135,8 +129,7 @@ namespace Tesis_Algoritmo_Genetico
                 }               
 
                 //Agrupamos la lista
-                //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();                
-
+                //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();      
                 //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
                 var agrupacion = poblacion.GroupBy(x => x).Select(g =>  g.Count() ).ToList();
                 var agrupacion2= agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
@@ -155,14 +148,7 @@ namespace Tesis_Algoritmo_Genetico
                         break;
                     }
                 }
-
-                //Imprimimos la lista agrupada
-                //agrupacion.ForEach(e => Console.WriteLine($"palabra: {e.Text} veces: {e.Count}"));
-                if (i == 35)
-                {
-
-                }
-                i = i + 1;                
+                i = i + 1;              
             } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(95));
             tiempo.Stop();
             Console.WriteLine("____________________________\n");
