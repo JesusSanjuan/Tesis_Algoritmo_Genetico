@@ -152,7 +152,7 @@ namespace Tesis_Algoritmo_Genetico
             } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(98));
             tiempo.Stop();
             Console.WriteLine("____________________________\n");
-            /*Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
+            Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
             foreach (decimal contenido in poblacion)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
@@ -162,7 +162,7 @@ namespace Tesis_Algoritmo_Genetico
             foreach (decimal contenido in ResultadosFX)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
-            }*/
+            }
             Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", ResultadosFX[0]);
             Console.WriteLine("\n\t\t RESULTADO TIR: {0}", poblacion[0]);
             Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");            
