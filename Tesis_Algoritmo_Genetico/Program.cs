@@ -16,54 +16,60 @@ namespace Tesis_Algoritmo_Genetico
         
         static void Main(string[] args)
         {
-            Random rand = new Random();
-            byte[] bytes = new byte[20];
-            rand.NextBytes(bytes);
-            double inicio = 50000000000;
-            double lowerBound = (double)inicio - 2000000;
-            double upperBound = (double)inicio + 2000000;
-
-            double inversion = (double)(rand.NextDouble() * (upperBound - lowerBound) + lowerBound);//////////////////
-            inversion = Math.Truncate(inversion * 10) / 10;
-            Random randNum = new Random();
-            int periodo = randNum.Next(12, 600);////////////////////////////
-
-            Random rand2 = new Random();
-            byte[] bytes2 = new byte[20];
-            rand2.NextBytes(bytes2);
-            double lowerBound2 = (double)0;
-            double upperBound2 = (double)20000;
-            
-            double VS = (double)(rand2.NextDouble() * (upperBound2 - lowerBound2) + lowerBound2);//////////////////
-            VS = Math.Truncate(VS * 10) / 10;
-
-            double[] FNE = new double[periodo];
-
-            Random rand3 = new Random();
-            byte[] bytes3 = new byte[20];
-            rand3.NextBytes(bytes3);
-            for (int num = 0; num < periodo; num++)
-            {                
-                double inicio3 = 10000000000;
-                double lowerBound3 = (double)inicio3 - 15000000;
-                double upperBound3 = (double)inicio3 + 15000000;
-                FNE[num] = Math.Truncate((double)(rand3.NextDouble() * (upperBound3 - lowerBound3) + lowerBound3)*100)/100;//////////////////
-            }
-
-             double PlancksConstant2 = 6.626E-321;
-
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
-            outputFile.WriteLine("Tiempo algoritmo secuencial\t\t\tTiempo algoritmo Genetico");
-            Stopwatch tiempo = Stopwatch.StartNew();
-            //double ResultadoTIR = iterativo(inversion, FNE, VS, periodo);
-            tiempo.Stop();
-            String Ztiempo1 = tiempo.Elapsed.TotalSeconds.ToString();
+            outputFile.WriteLine("Tiempo algoritmo secuencial\t\t\t\t\t\tTiempo algoritmo Genetico\t\t\t\t\t\tAG TIR\t\t\t\t\t\tPorcentaje Convergencia\t\t\t\t\t\tPrecicion a 0\t\t\t\t\t\tInversion\t\t\t\t\t\tPeriodo\t\t\t\t\t\tValor de Salvamento");
+            int i = 1;
+            do {
 
-            Stopwatch tiempo2 = Stopwatch.StartNew();
-            double ResultadoTIR2 = genetico(inversion, FNE, VS, periodo);
-            tiempo2.Stop();
-            String Ztiempo2 = tiempo2.Elapsed.TotalSeconds.ToString();
-            outputFile.WriteLine(Ztiempo1+ "\t\t\t\t\t" + Ztiempo2);
+                Random rand = new Random();
+                byte[] bytes = new byte[40];
+                rand.NextBytes(bytes);
+                double inicio = 50000000;
+                double lowerBound = (double)inicio - 40000000;
+                double upperBound = (double)inicio + 49999999;
+
+                double inversion = (double)(rand.NextDouble() * (upperBound - lowerBound) + lowerBound);
+                inversion = Math.Truncate(inversion * 10000) / 10000;//////////////////
+                Random randNum = new Random();
+                int periodo = randNum.Next(12, 600);////////////////////////////
+
+                Random rand2 = new Random();
+                byte[] bytes2 = new byte[40];
+                rand2.NextBytes(bytes2);
+                double lowerBound2 = (double)0;
+                double upperBound2 = (double)9999999;
+
+                double VS = rand2.NextDouble() * (upperBound2 - lowerBound2) + lowerBound2;//////////////////
+                VS = Math.Truncate(VS * 100) / 100;
+
+                double[] FNE = new double[periodo];
+
+                Random rand3 = new Random();
+                byte[] bytes3 = new byte[40];
+                rand3.NextBytes(bytes3);
+                for (int num = 0; num < periodo; num++)
+                {
+                    double inicio3 = 50000000;
+                    double lowerBound3 = (double)inicio3 - 40000000;
+                    double upperBound3 = (double)inicio3 + 49999999;
+                    FNE[num] = rand3.NextDouble() * (upperBound3 - lowerBound3) + lowerBound3; //////////////////
+                }
+                
+                Stopwatch tiempo = Stopwatch.StartNew();
+                //double ResultadoTIR = iterativo(inversion, FNE, VS, periodo);
+                tiempo.Stop();
+                String Ztiempo1 = tiempo.Elapsed.TotalSeconds.ToString();
+
+                
+                List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);
+                
+                Console.WriteLine("Fin de la prueba {0} con el algoritmo genetico\n",i);
+                
+                outputFile.WriteLine(Ztiempo1 + " Seg\t\t\t\t\t\t\t\t\t\t\t" + Resultados2[0].ToString() + " Seg\t\t\t\t\t\t\t" + Resultados2[1].ToString()+" %\t\t\t\t\t" + Resultados2[2].ToString() + " %\t\t\t\t\t\t\t\t" + Resultados2[3].ToString()+ " fx\t\t\t\t" + Resultados2[4].ToString() + " iteraciones\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
+                
+                i = i + 1;
+            }while(i <= (int)10);
+            Console.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS\n");
             outputFile.Close();
             Console.ReadKey();
         }
@@ -86,16 +92,17 @@ namespace Tesis_Algoritmo_Genetico
             return ResultadoTIR;
         }
 
-        public static double genetico(double inversion, double[] FNE, double VS, int periodo)
+        public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo)
         {
+            Stopwatch tiempo2 = Stopwatch.StartNew();
             double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
-            int poblacionNumero = 240;
+            int poblacionNumero = 1000;
 
             Random rand2 = new Random();
-            byte[] bytes2 = new byte[5];
+            byte[] bytes2 = new byte[20];
             rand2.NextBytes(bytes2);
-            double lowerBound = (double)aproxInicial - 100;
-            double upperBound = (double)aproxInicial + 100;
+            double lowerBound = (double)aproxInicial - 5000;
+            double upperBound = (double)aproxInicial + 5000;
 
             List<double> poblacion = new List<double>();
 
@@ -150,15 +157,22 @@ namespace Tesis_Algoritmo_Genetico
                         double valor = Convert.ToDouble(el.Text);
                         porcentajeconvergencia = porcentaje * valor;
 
-                        Console.WriteLine("\t****************************\n");
-                        Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
-                        break;
+                        //Console.WriteLine("\t****************************\n");
+                        //Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
+                       // break;
                     }
                 }
                 i = i + 1;
             } while (porcentajeconvergencia <(double)98);
-
-            return poblacion[0];
+            tiempo2.Stop();
+            String Ztiempo2 = tiempo2.Elapsed.TotalSeconds.ToString();
+            List<string> resultados=new List<string>();
+            resultados.Add(Ztiempo2);
+            resultados.Add(poblacion[0].ToString());
+            resultados.Add(porcentajeconvergencia.ToString());
+            resultados.Add(ResultadosFX[0].ToString());
+            resultados.Add(i.ToString()); ;
+            return resultados;
         }
 
         public static double CalcularTIR(double ValorTIR, int caso, double inversion, double[] FNE, double VdS, int n)
@@ -230,7 +244,9 @@ namespace Tesis_Algoritmo_Genetico
             resultado = sumasuperior / sumainferior;
 
             double x0;
-            x0 = (double)Math.Pow((double)(sumainferior / Inversion), (double)(1 / resultado));
+            double t1 = sumainferior / Inversion;
+            double t2 = 1 / resultado;
+            x0 = Math.Pow(t1,t2);
             x0 = (x0 - 1) * 100;
             return x0;
         }
@@ -241,11 +257,7 @@ namespace Tesis_Algoritmo_Genetico
             double valorFX = 0;
             foreach (double contenido in poblacion)
             {
-                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
-                if (double.IsNaN(valorFX))
-                {
-
-                }
+                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);               
                 ResultadosFX.Add(valorFX);
             }
             return ResultadosFX;
@@ -398,7 +410,7 @@ namespace Tesis_Algoritmo_Genetico
             double DivTMAR = 1 + TMAR;
             for (i = 1; i < Periodo; i++)
             {
-                double valorinferior = Math.Pow(DivTMAR, i);
+                double valorinferior = Math.Pow(DivTMAR, i);               
                 FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
             }
             double valorinferiorF = Math.Pow(DivTMAR, i);
