@@ -19,14 +19,14 @@ namespace Tesis_Algoritmo_Genetico
             Random rand = new Random();
             byte[] bytes = new byte[20];
             rand.NextBytes(bytes);
-            double inicio = 50000000;
+            double inicio = 50000000000;
             double lowerBound = (double)inicio - 2000000;
             double upperBound = (double)inicio + 2000000;
 
             double inversion = (double)(rand.NextDouble() * (upperBound - lowerBound) + lowerBound);//////////////////
             inversion = Math.Truncate(inversion * 10) / 10;
             Random randNum = new Random();
-            int periodo = randNum.Next(12, 200);////////////////////////////
+            int periodo = randNum.Next(12, 600);////////////////////////////
 
             Random rand2 = new Random();
             byte[] bytes2 = new byte[20];
@@ -44,17 +44,14 @@ namespace Tesis_Algoritmo_Genetico
             rand3.NextBytes(bytes3);
             for (int num = 0; num < periodo; num++)
             {                
-                double inicio3 = 5000;
-                double lowerBound3 = (double)inicio3 - 2000;
-                double upperBound3 = (double)inicio3 + 2000;
+                double inicio3 = 10000000000;
+                double lowerBound3 = (double)inicio3 - 15000000;
+                double upperBound3 = (double)inicio3 + 15000000;
                 FNE[num] = Math.Truncate((double)(rand3.NextDouble() * (upperBound3 - lowerBound3) + lowerBound3)*100)/100;//////////////////
             }
 
-            /* double PlancksConstant = 6.626E-34M;
-             double PlancksConstant2 = 6.626E-26;
-             double PlancksConstant3 = 6.626E-26;
-             double pla =PlancksConstant2 * PlancksConstant3;
-             double pla2 =pla * 1000000000000;*/
+             double PlancksConstant2 = 6.626E-321;
+
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
             outputFile.WriteLine("Tiempo algoritmo secuencial\t\t\tTiempo algoritmo Genetico");
             Stopwatch tiempo = Stopwatch.StartNew();
@@ -245,6 +242,10 @@ namespace Tesis_Algoritmo_Genetico
             foreach (double contenido in poblacion)
             {
                 valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
+                if (double.IsNaN(valorFX))
+                {
+
+                }
                 ResultadosFX.Add(valorFX);
             }
             return ResultadosFX;
@@ -399,9 +400,6 @@ namespace Tesis_Algoritmo_Genetico
             {
                 double valorinferior = Math.Pow(DivTMAR, i);
                 FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
-                if (i == 20)
-                {
-                }
             }
             double valorinferiorF = Math.Pow(DivTMAR, i);
             FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
