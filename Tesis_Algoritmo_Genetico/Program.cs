@@ -18,23 +18,27 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
+            Random random = new Random();
+            Random randNum = new Random();
+            Random random2 = new Random();
+            Random random3 = new Random();
             do {
                 /**************************************************************************/
-                Random random = new Random();
+                
                 double minimo = 100000000;
                 double maximo = 999999999888;
                 double inversion = random.NextDouble() * (maximo - minimo) + minimo;
                 /**************************************************************************/
-                Random randNum = new Random();
+                
                 int periodo = randNum.Next(12, 601);
                 /**************************************************************************/
-                Random random2 = new Random();
+                
                 double minimo2 = 0;
                 double maximo2 = 99999999;
                 double VS = random2.NextDouble() * (maximo2 - minimo2) + minimo2;
 
                 double[] FNE = new double[periodo];    
-                Random random3 = new Random();
+                
                 double minimo3 = 100000;
                 double maximo3 = 9999999999;
                 for (int num = 0; num < periodo; num++)
@@ -43,7 +47,7 @@ namespace Tesis_Algoritmo_Genetico
                 }
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
-                Console.WriteLine("Fin de la prueba {0} de {0}, con el algoritmo genetico\n",cont,i);                
+                Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
                 outputFile.WriteLine("Prueba numero "+i.ToString()+"\t\t\t\t" + Resultados2[0].ToString() + " Seg\t\t\t\t\t\t\t" + Resultados2[1].ToString()+" %\t\t\t\t\t" + Resultados2[2].ToString() + " %\t\t\t\t\t\t\t\t" + Resultados2[3].ToString()+ " fx\t\t\t\t" + Resultados2[4].ToString() + " iteraciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
@@ -58,11 +62,11 @@ namespace Tesis_Algoritmo_Genetico
         {
             Stopwatch tiempo2 = Stopwatch.StartNew();
             double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
-            int poblacionNumero = 500;
+            int poblacionNumero = 1000;
 
             Random random = new Random();
-            double minimo = aproxInicial - 1000;
-            double maximo = aproxInicial + 1000;
+            double minimo = aproxInicial - 500;
+            double maximo = aproxInicial + 500;
 
             List<double> poblacion = new List<double>();
 
@@ -106,13 +110,14 @@ namespace Tesis_Algoritmo_Genetico
                 }
 
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => g.Count()).ToList();
+                agrupacion = agrupacion.OrderByDescending(o => o).ToList();
                 var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
                 var agrupacion3 = agrupacion.GroupBy(x => x).Select(g => g.Key).ToList();
                 var valormax = agrupacion3.Max();
 
                 foreach (var el in agrupacion2)
                 {
-                    if (el.Count == 1 && el.Text == valormax)
+                    if (el.Text == valormax && el.Count == 1 )
                     {
                         double valor = Convert.ToDouble(el.Text);
                         porcentajeconvergencia = porcentaje * valor;
@@ -125,13 +130,19 @@ namespace Tesis_Algoritmo_Genetico
                 i = i + 1;
             } while (porcentajeconvergencia <(double)99);
             tiempo2.Stop();
+            var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+            resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
+
+            var resultTMR = ResultadosFX.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+            resultTMR = resultTMR.OrderByDescending(o => o.Count).ToList();
+
             String Ztiempo2 = tiempo2.Elapsed.TotalSeconds.ToString();
-            List<string> resultados=new List<string>();
+            List<string> resultados = new List<string>();
             resultados.Add(Ztiempo2);
-            resultados.Add(poblacion[0].ToString());
+            resultados.Add(resultTIR[0].Text.ToString());
             resultados.Add(porcentajeconvergencia.ToString());
-            resultados.Add(ResultadosFX[0].ToString());
-            resultados.Add(i.ToString()); ;
+            resultados.Add(resultTMR[0].Text.ToString());
+            resultados.Add(i.ToString());
             return resultados;
         }
        
