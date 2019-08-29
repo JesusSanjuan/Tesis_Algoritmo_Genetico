@@ -14,7 +14,7 @@ namespace Tesis_Algoritmo_Genetico
         {
             /*Lectura de informacion de datos de VPN*/
             String inve, per, vss;
-            decimal inversion, VS;
+            double inversion, VS;
             int periodo;
             Console.WriteLine("Introduzca la inversion (P):  ");
             inve = Console.ReadLine();
@@ -25,7 +25,7 @@ namespace Tesis_Algoritmo_Genetico
             //Console.WriteLine("Introduzca el VPN posible: ");
             //vpn = Console.ReadLine();
 
-            decimal[] FNE = new decimal[Convert.ToInt32(per)];
+            double[] FNE = new double[Convert.ToInt32(per)];
             /*Random rand0 = new Random();
             byte[] bytes = new byte[5];
             rand0.NextBytes(bytes);*/
@@ -43,15 +43,15 @@ namespace Tesis_Algoritmo_Genetico
                 numeroaleatorio = Math.Round(numeroaleatorio, 4);*/
                 Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
                 String temporal= Console.ReadLine();
-                FNE[x] = Convert.ToDecimal(temporal);
+                FNE[x] = Convert.ToDouble(temporal);
                 //FNE[x] = 15000;                
                 //Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x + 1, numeroaleatorio.ToString());
             }
 
-            inversion = Convert.ToDecimal(inve);
+            inversion = Convert.ToDouble(inve);
             periodo = Convert.ToInt32(per);
-            VS = Convert.ToDecimal(vss);
-            //VPN = Convert.ToDecimal(vpn);
+            VS = Convert.ToDouble(vss);
+            //VPN = Convert.Todouble(vpn);
             /*Lectura de informacion de datos de VPN*/
 
             Console.WriteLine("\nIntroduzca la cantidad de la poblacion (Numeros pares):  ");
@@ -66,22 +66,20 @@ namespace Tesis_Algoritmo_Genetico
 
             Stopwatch tiempo = Stopwatch.StartNew();
 
-            decimal aproxInicial= aproximacioninicial(inversion,FNE, periodo);
+            double aproxInicial= aproximacioninicial(inversion,FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
             Console.WriteLine("Generandos numeros aleatorios -100 y +100 entorno a la aproximacion incial\n");
 
-            // Generate and display 5 random byte (integer) values.
-            Random rand2 = new Random();            
-            byte[] bytes2 = new byte[5];
-            rand2.NextBytes(bytes2);
-            double lowerBound = (double) aproxInicial- 100;
-            double upperBound = (double )aproxInicial+ 100;      
+       
+            Random random = new Random();
+            double minimo = aproxInicial - 500;
+            double maximo = aproxInicial + 500;              
 
-            List<decimal> poblacion = new List<decimal>();
+            List<double> poblacion = new List<double>();
 
             while (poblacion.Count < Int32.Parse(poblacionNumero))
             {
-                decimal numeroAleatorio = (decimal)(rand2.NextDouble() * (upperBound - lowerBound) + lowerBound);
+                double numeroAleatorio = random.NextDouble() * (maximo - minimo) + minimo;
                 if (!poblacion.Contains(numeroAleatorio))
                 {
                     poblacion.Add(numeroAleatorio);
@@ -98,25 +96,25 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("____________________________\n\n\n");*/
             //Console.ReadKey();
             int i = 1;
-            decimal porcentajeconvergencia = 0;
-            decimal porcentaje = Convert.ToDecimal(100) / Convert.ToDecimal(poblacionNumero);
-            List<decimal> ResultadosFX;
+            double porcentajeconvergencia = 0;
+            double porcentaje = (((double)100) / Int32.Parse(poblacionNumero));
+            List<double> ResultadosFX;
             do
             {                
                 ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
 
                 List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
                 List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
-                List<decimal> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
+                List<double> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
                 List<int> cruce1 = posTorneo( 0, padre.Count / 2);
                 List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);               
                 
-                List<decimal> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+                List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
                 cruce1 = DesordenarLista(cruce1);
                 cruce2 = DesordenarLista(cruce2);
-                List<decimal> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                List<decimal> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
+                List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+                List<double> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
                 poblacion.Clear();
                 poblacion = padre.Concat(hijos_Generados).ToList();
 
@@ -124,23 +122,36 @@ namespace Tesis_Algoritmo_Genetico
                 {
                     int numeroAleatorio = new Random().Next(0, padre.Count / 2);
                     int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
-                    List<decimal> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
+                    List<double> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
                     poblacion = poblacion.Concat(hijoimpar).ToList();
-                }               
+                }
 
                 //Agrupamos la lista
                 //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();      
                 //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
-                var agrupacion = poblacion.GroupBy(x => x).Select(g =>  g.Count() ).ToList();
+                
+                List<double> contandovalores = new List<double>();
+                List<double> contandovalores2 = new List<double>();
+                /*foreach (var valor in poblacion)
+                {
+                    contandovalores.Add(valor);
+                    contandovalores2 .Add( poblacion.Where(x => x == valor).Count());
+                    
+                }*/
+
+
+
+                var agrupacion = poblacion.GroupBy(x => x).Select(g => g.Count()).ToList();
+                agrupacion =agrupacion.OrderByDescending(o => o).ToList();                
                 var agrupacion2= agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
                 var agrupacion3 = agrupacion.GroupBy(x => x).Select(g =>  g.Key).ToList();
                 var valormax = agrupacion3.Max();
                
                 foreach (var el in agrupacion2)
                 {
-                    if(el.Count ==1 && el.Text==valormax)
+                    if(el.Text==valormax && el.Count == 1)
                     {
-                        decimal valor = Convert.ToDecimal(el.Text);                        
+                        double valor = Convert.ToDouble(el.Text);                        
                         porcentajeconvergencia = porcentaje * valor;
                         
                         Console.WriteLine("\t****************************\n");
@@ -149,71 +160,72 @@ namespace Tesis_Algoritmo_Genetico
                     }
                 }
                 i = i + 1;              
-            } while (Decimal.ToInt32(porcentajeconvergencia) < Decimal.ToInt32(98));
+            } while (porcentajeconvergencia < (double)95);
             tiempo.Stop();
+
+
+
+            var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+            resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
+
+            var resultTMR = ResultadosFX.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+            resultTMR = resultTMR.OrderByDescending(o => o.Count).ToList();
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
-            foreach (decimal contenido in poblacion)
+            foreach (double contenido in poblacion)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
             }
             Console.WriteLine("____________________________\n");
             Console.WriteLine("Imprimiendo la ResultadoFX de la generacion {0} final: ", i);
-            foreach (decimal contenido in ResultadosFX)
+            foreach (double contenido in ResultadosFX)
             {
                 Console.WriteLine("\t{0}", contenido.ToString());
             }
-            Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", ResultadosFX[0]);
-            Console.WriteLine("\n\t\t RESULTADO TIR: {0}", poblacion[0]);
-            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");            
-            if (Stopwatch.IsHighResolution)
-            {
-                Console.WriteLine("Alta precisión");
-            }
-            else
-            {
-                Console.WriteLine("Baja precisión");
-            }
+            Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", resultTMR[0].Text);
+            Console.WriteLine("\n\t\t RESULTADO TIR: {0}", resultTIR[0].Text);
+            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");   
             
             Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
-            Console.WriteLine($"Precision: {(1.0 / Stopwatch.Frequency).ToString("E")} segundos");
             Console.ReadKey();
         }
 
-        static decimal aproximacioninicial(decimal Inversion, decimal[] FNE, int Periodo)
+        static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
         {
-            decimal resultado, sumasuperior=0, sumainferior=0;
-            for(int i=0;i<FNE.Length;i++)
+            double resultado, sumasuperior = 0, sumainferior = 0;
+            for (int i = 0; i < FNE.Length; i++)
             {
-                decimal t = (FNE[i] * (i + 1));
+                double t = (FNE[i] * (i + 1));
                 sumasuperior = sumasuperior + t;
                 sumainferior = sumainferior + FNE[i];
             }
             resultado = sumasuperior / sumainferior;
 
-            decimal x0;
-            x0 =(decimal) Math.Pow((double)(sumainferior/Inversion ), (double)(1/resultado));
-            x0 = (x0 - 1)*100;
+            double x0;
+            double t1 = sumainferior / Inversion;
+            double t2 = 1 / resultado;
+            x0 = Math.Pow(t1, t2);
+            x0 = (x0 - 1) * 100;
             return x0;
         }
 
-        static List<decimal> fx(decimal Inversion, decimal[] FNE, decimal VS, List<decimal> poblacion, int Periodo)
+        static List<double> fx(double Inversion, double[] FNE, double VS, List<double> poblacion, int Periodo)
         {
-            List<decimal> ResultadosFX = new List<decimal>();
-            decimal valorFX = 0;
-            foreach (decimal contenido in poblacion)
+            List<double> ResultadosFX = new List<double>();
+            double valorFX = 0;
+            foreach (double contenido in poblacion)
             {
                 valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
                 ResultadosFX.Add(valorFX);
             }
             return ResultadosFX;
         }
-        
-        static List<int> posTorneo( int inicio, int tamañopoblacion)
+
+        static List<int> posTorneo(int inicio, int tamañopoblacion)
         {
             var torneo = new List<int>();
             var resultorneo = new List<int>();
-            for (int i=inicio;i<tamañopoblacion; i++)
+            for (int i = inicio; i < tamañopoblacion; i++)
             {
                 torneo.Add(i);
             }
@@ -236,30 +248,30 @@ namespace Tesis_Algoritmo_Genetico
             return arrDes;
         }
 
-        static List<decimal> Seleccion(List<int> p1, List<int> p2, List<decimal> ResultadosFX, List<decimal>poblacion)
+        static List<double> Seleccion(List<int> p1, List<int> p2, List<double> ResultadosFX, List<double> poblacion)
         {
-            List<decimal> padre = new List<decimal>();
-            List<decimal> padrefx = new List<decimal>();
+            List<double> padre = new List<double>();
+            List<double> padrefx = new List<double>();
 
             for (int i = 0; i < p1.Count; i++)
             {
-                decimal fx1 = ResultadosFX[p1[i]];
-                decimal fx2 = ResultadosFX[p2[i]];
+                double fx1 = ResultadosFX[p1[i]];
+                double fx2 = ResultadosFX[p2[i]];
 
-                decimal pob1 = poblacion[p1[i]];
-                decimal pob2 = poblacion[p2[i]];
+                double pob1 = poblacion[p1[i]];
+                double pob2 = poblacion[p2[i]];
 
-                List<decimal> tem = new List<decimal>();
+                List<double> tem = new List<double>();
                 tem.Add(fx1);
                 tem.Add(fx2);
 
-                
-                decimal ganador = 0;
+
+                double ganador = 0;
                 int indexganadorPob = 0;
 
                 if (fx1 >= 0 && fx2 >= 0)
                 {
-                    List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                    List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
                     ganador = reorganizacionPos.Min(x => x);
                     indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
                     padrefx.Add(ganador);
@@ -267,7 +279,7 @@ namespace Tesis_Algoritmo_Genetico
                 }
                 else if (fx1 < -0 && fx2 < -0)
                 {
-                    List<decimal> reorganizacionNega = tem.Where(x => x < 0).ToList();
+                    List<double> reorganizacionNega = tem.Where(x => x < 0).ToList();
                     ganador = reorganizacionNega.Max(x => x);
                     indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
                     padrefx.Add(ganador);
@@ -275,7 +287,7 @@ namespace Tesis_Algoritmo_Genetico
                 }
                 else
                 {
-                    decimal fx1p, fx2p;
+                    double fx1p, fx2p;
                     fx1p = Math.Abs(fx1);
                     fx2p = Math.Abs(fx2);
 
@@ -284,10 +296,10 @@ namespace Tesis_Algoritmo_Genetico
                     tem.Add(fx1p);
                     tem.Add(fx2p);
 
-                    if (fx1<-0)
-                    {                        
+                    if (fx1 < -0)
+                    {
 
-                        List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
                         ganador = reorganizacionPos.Min(x => x);
                         if (fx1p == ganador)
                         {
@@ -305,7 +317,7 @@ namespace Tesis_Algoritmo_Genetico
                     }
                     else
                     {
-                        List<decimal> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
                         ganador = reorganizacionPos.Min(x => x);
                         if (fx2p == ganador)
                         {
@@ -319,50 +331,66 @@ namespace Tesis_Algoritmo_Genetico
                             padrefx.Add(fx1);
                             padre.Add(poblacion[indexganadorPob]);
                         }
-                    }                    
-                }  
-            }      
+                    }
+                }
+            }
             return padre;
         }
 
-        static List<decimal> Cruce(List<int> cruce1, List<int> cruce2,List<decimal> padre)
+        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
         {
-            List<decimal> hijos= new List<decimal>();
+            List<double> hijos = new List<double>();
             for (int i = 0; i < cruce1.Count; i++)
             {
-                decimal padre1 = padre[cruce1[i]];
-                decimal padre2 = padre[cruce2[i]];
+                double padre1 = padre[cruce1[i]];
+                double padre2 = padre[cruce2[i]];
 
-                decimal media = (padre1 + padre2) / 2;
-                //decimal media_geometrica = (decimal)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
-                //decimal media_geometrica = (decimal)Math.Sqrt((double)(padre1*padre2));
+                double media = (padre1 + padre2) / 2;
+                //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
+                //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
                 hijos.Add(media);
             }
             return hijos;
         }
 
-        static List<decimal> CruceImpar(decimal padre1, decimal padre2)
+        static List<double> CruceImpar(double padre1, double padre2)
         {
-            List<decimal> hijos = new List<decimal>(); 
-            decimal media = (padre1 + padre2) / 2;
+            List<double> hijos = new List<double>();
+            double media = (padre1 + padre2) / 2;
             hijos.Add(media);
             return hijos;
         }
 
-        public static decimal CalcularVPN(decimal Inversion, decimal[] FNE, decimal VS, decimal TMAR, int Periodo)
+        public static double CalcularVPN(double Inversion, double[] FNE, double VS, double TMAR, int Periodo)
         {
-            decimal FNEAcumulado = 0, fVPN = 0;
+            double FNEAcumulado = 0, fVPN = 0;
             int i = 0;
-            decimal DivTMAR = 1 + TMAR;
+            double DivTMAR = 1 + TMAR;
             for (i = 1; i < Periodo; i++)
             {
-                decimal valorinferior = (decimal)Math.Pow((double)DivTMAR, i);
+                double valorinferior = Math.Pow(DivTMAR, i);
+                if (valorinferior == 0 && DivTMAR > 0)
+                {
+                    valorinferior = Double.MaxValue;
+                }
+                if (valorinferior == 0 && DivTMAR < 0)
+                {
+                    valorinferior = Double.MinValue;
+                }
                 FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
             }
-            decimal valorinferiorF = (decimal)Math.Pow((double)DivTMAR, i);
+            double valorinferiorF = Math.Pow(DivTMAR, i);
+            if (valorinferiorF == 0 && DivTMAR > 0)
+            {
+                valorinferiorF = Double.MaxValue;
+            }
+            if (valorinferiorF == 0 && DivTMAR < 0)
+            {
+                valorinferiorF = Double.MinValue;
+            }
             FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
             fVPN = FNEAcumulado - Inversion;
             return fVPN;
-        }        
+        }
     }
 }
