@@ -25,8 +25,8 @@ namespace Tesis_Algoritmo_Genetico
             do {
                 /**************************************************************************/
                 
-                double minimo = 100000000;
-                double maximo = 999999999888;
+                double minimo = 1000000000000;
+                double maximo = 9999999999999;
                 double inversion = random.NextDouble() * (maximo - minimo) + minimo;
                 /**************************************************************************/
                 
@@ -34,13 +34,13 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 
                 double minimo2 = 0;
-                double maximo2 = 99999999;
+                double maximo2 = 9999999999;
                 double VS = random2.NextDouble() * (maximo2 - minimo2) + minimo2;
 
                 double[] FNE = new double[periodo];    
                 
-                double minimo3 = 100000;
-                double maximo3 = 9999999999;
+                double minimo3 = -1000000000000;
+                double maximo3 = 9999999999999;
                 for (int num = 0; num < periodo; num++)
                 {                   
                     FNE[num] = random3.NextDouble() * (maximo3 - minimo3) + minimo3; 
@@ -48,7 +48,7 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba numero "+i.ToString()+"\t\t\t\t" + Resultados2[0].ToString() + " Seg\t\t\t\t\t\t\t" + Resultados2[1].ToString()+" %\t\t\t\t\t" + Resultados2[2].ToString() + " %\t\t\t\t\t\t\t\t" + Resultados2[3].ToString()+ " fx\t\t\t\t" + Resultados2[4].ToString() + " iteraciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba numero "+cont.ToString()+"\t\t\t\t" + Resultados2[0].ToString() + " Seg\t\t\t\t\t\t\t" + Resultados2[1].ToString()+" %\t\t\t\t\t" + Resultados2[2].ToString() + " %\t\t\t\t\t\t\t\t" + Resultados2[3].ToString()+ " fx\t\t\t\t" + Resultados2[4].ToString() + " iteraciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
             }while(cont <= i);
