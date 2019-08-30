@@ -90,6 +90,7 @@ namespace Tesis_Algoritmo_Genetico
             double porcentajeconvergencia = 0;
             double porcentaje = (((double)100) / poblacionNumero);
             List<double> ResultadosFX;
+            Random random2 = new Random();
             do
             {
                 ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
@@ -100,21 +101,41 @@ namespace Tesis_Algoritmo_Genetico
 
                 List<int> cruce1 = posTorneo(0, padre.Count / 2);
                 List<int> cruce2 = posTorneo(padre.Count / 2, padre.Count);
+                int c1 = cruce1.Count();
+                int c2 = cruce2.Count();
+                List<double> hijos_Generados = new List<double>();
 
-                List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
-                cruce1 = DesordenarLista(cruce1);
-                cruce2 = DesordenarLista(cruce2);
-                List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                List<double> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
+
+                double probCruz = random2.NextDouble();
+
+                if (probCruz < 0.8)
+                {
+                    hijos_Generados = CruceTotal(padre, cruce1, cruce2);
+                }
+                else
+                {
+                    /* if (c1 != c2)LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     {                        
+                         padre.RemoveAt(random.Next(0, padre.Count));
+                         hijos_Generados = padre;LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     }
+                     elseLO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     {*/
+                    hijos_Generados = padre;
+                    //}LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                }
+
                 poblacion.Clear();
                 poblacion = padre.Concat(hijos_Generados).ToList();
-                if (cruce1.Count() != cruce2.Count())
+                poblacion= DesordenarLista(poblacion);
+
+                /*if (c1 != c2)///LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
                 {
                     int numeroAleatorio = new Random().Next(0, padre.Count / 2);
                     int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
                     List<double> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
-                    poblacion = poblacion.Concat(hijoimpar).ToList();
-                }
+                    poblacion = poblacion.Concat(hijoimpar).ToList();LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                }*/
 
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => g.Count()).ToList();
                 agrupacion = agrupacion.OrderByDescending(o => o).ToList();
@@ -134,7 +155,7 @@ namespace Tesis_Algoritmo_Genetico
                     break;
                 }
                 i = i + 1;
-            } while (porcentajeconvergencia <(double)99.7);
+            } while (porcentajeconvergencia <(double)99);
             tiempo2.Stop();
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
@@ -234,7 +255,7 @@ namespace Tesis_Algoritmo_Genetico
 
                 if (fx1 >= 0 && fx2 >= 0)
                 {
-                    List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                    List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
                     ganador = reorganizacionPos.Min(x => x);
                     indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
                     padrefx.Add(ganador);
@@ -262,7 +283,7 @@ namespace Tesis_Algoritmo_Genetico
                     if (fx1 < -0)
                     {
 
-                        List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
                         ganador = reorganizacionPos.Min(x => x);
                         if (fx1p == ganador)
                         {
@@ -298,6 +319,15 @@ namespace Tesis_Algoritmo_Genetico
                 }
             }
             return padre;
+        }
+
+        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2)
+        {
+            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+            cruce1 = DesordenarLista(cruce1);
+            cruce2 = DesordenarLista(cruce2);
+            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+           return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
         static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
