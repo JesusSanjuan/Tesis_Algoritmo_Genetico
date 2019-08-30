@@ -3,8 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Tesis_Algoritmo_Genetico
 {
@@ -14,7 +13,7 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
-            outputFile.WriteLine("Prueba\t\t\t\t\tTiempo algoritmo Genetico\t\t\t\t\t\tAG TIR\t\t\t\t\t\tPorcentaje Convergencia\t\t\t\t\t\tprecision a 0\t\t\t\t\t\tIteraciones AG\t\t\t\t\t\tInversion\t\t\t\t\t\tPeriodo\t\t\t\t\t\tValor de Salvamento");
+            outputFile.WriteLine("Num Prueba\t\t\t\tTiempo algoritmo Genetico\t\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\t\tPorcentaje Convergencia\t\t\tPrecision a 0\t\t\t\t\tGeneraciones del AG\t\t\t\t\t\tInversion\t\t\t\t\t\t\tPeriodo\t\t\t\t\t\tValor de Salvamento");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
@@ -22,6 +21,8 @@ namespace Tesis_Algoritmo_Genetico
             Random randNum = new Random();
             Random random2 = new Random();
             Random random3 = new Random();
+            Console.WriteLine("\nEjecutando pruebas\n");
+            Stopwatch tiempoT = Stopwatch.StartNew();
             do {
                 /**************************************************************************/
                 
@@ -48,14 +49,21 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba numero "+cont.ToString()+"\t\t\t\t" + Resultados2[0].ToString() + " Seg\t\t\t\t\t\t\t" + Resultados2[1].ToString()+" %\t\t\t\t\t" + Resultados2[2].ToString() + " %\t\t\t\t\t\t\t\t" + Resultados2[3].ToString()+ " fx\t\t\t\t" + Resultados2[4].ToString() + " iteraciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba numero "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + Resultados2[5] + " Generaciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
             }while(cont <= i);
-
-            Console.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS\n");
+            tiempoT.Stop();
+            String tiemTotal = tiempoT.Elapsed.TotalSeconds.ToString();
+            Console.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} SEGUNDOS  \n", tiemTotal);
+            outputFile.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} SEGUNDOS  \n", tiemTotal);
             outputFile.Close();
-            Console.ReadKey();
+            Thread.Sleep(1500);
+            Console.WriteLine("\t ABRIENDO REPORTE\n");
+            AbrirArchivo("D:\\Archivo.txt");
+            Thread.Sleep(1000);
+            Console.WriteLine("\t Cerrando\n");
+            Thread.Sleep(2000);
         }
 
         public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo)
@@ -65,8 +73,8 @@ namespace Tesis_Algoritmo_Genetico
             int poblacionNumero = 1000;
 
             Random random = new Random();
-            double minimo = aproxInicial - 500;
-            double maximo = aproxInicial + 500;
+            double minimo = aproxInicial - 1000;
+            double maximo = aproxInicial + 1000;
 
             List<double> poblacion = new List<double>();
 
@@ -100,7 +108,6 @@ namespace Tesis_Algoritmo_Genetico
                 List<double> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
                 poblacion.Clear();
                 poblacion = padre.Concat(hijos_Generados).ToList();
-
                 if (cruce1.Count() != cruce2.Count())
                 {
                     int numeroAleatorio = new Random().Next(0, padre.Count / 2);
@@ -121,14 +128,13 @@ namespace Tesis_Algoritmo_Genetico
                     {
                         double valor = Convert.ToDouble(el.Text);
                         porcentajeconvergencia = porcentaje * valor;
-
                         //Console.WriteLine("\t****************************\n");
-                        //Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
-                       // break;
+                        //Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);                       
                     }
+                    break;
                 }
                 i = i + 1;
-            } while (porcentajeconvergencia <(double)99);
+            } while (porcentajeconvergencia <(double)99.7);
             tiempo2.Stop();
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
@@ -140,6 +146,7 @@ namespace Tesis_Algoritmo_Genetico
             List<string> resultados = new List<string>();
             resultados.Add(Ztiempo2);
             resultados.Add(resultTIR[0].Text.ToString());
+            resultados.Add(aproxInicial.ToString());
             resultados.Add(porcentajeconvergencia.ToString());
             resultados.Add(resultTMR[0].Text.ToString());
             resultados.Add(i.ToString());
@@ -296,6 +303,7 @@ namespace Tesis_Algoritmo_Genetico
         static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
         {
             List<double> hijos = new List<double>();
+            Random random = new Random();
             for (int i = 0; i < cruce1.Count; i++)
             {
                 double padre1 = padre[cruce1[i]];
@@ -304,9 +312,24 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
+                //media = mutacion(media, random);
                 hijos.Add(media);
             }
             return hijos;
+        }
+
+        static double mutacion(double hijo, Random random)
+        {            
+            double mutacion = random.NextDouble();
+            if (mutacion < 0.06)
+            {
+               // int mutApli = random.Next(1, 1000);
+                return hijo+ Convert.ToDouble(mutacion);
+            }
+            else
+            {
+                return hijo;
+            }            
         }
 
         static List<double> CruceImpar(double padre1, double padre2)
@@ -347,6 +370,25 @@ namespace Tesis_Algoritmo_Genetico
             FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
             fVPN = FNEAcumulado - Inversion;
             return fVPN;
+        }  
+
+        private static void AbrirArchivo(string Path)
+        {
+            Process P = new Process();
+            try
+            {
+                P.StartInfo.FileName = Path;
+                P.StartInfo.WindowStyle = ProcessWindowStyle.Normal;
+                P.Start();
+                //Espera el proceso para que lo termine y continuar
+                P.WaitForExit();
+                //Liberar
+                P.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + " No se puede abrir el documento " + Path, "Error");
+            }
         }
-    }  
+    }
 }
