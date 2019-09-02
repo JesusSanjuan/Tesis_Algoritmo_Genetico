@@ -13,7 +13,7 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
-            outputFile.WriteLine("Num Prueba\t\t\t\tTiempo algoritmo Genetico\t\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\t\tPorcentaje Convergencia\t\t\tPrecision a 0\t\t\t\t\tGeneraciones del AG\t\t\t\t\t\tInversion\t\t\t\t\t\t\tPeriodo\t\t\t\t\t\tValor de Salvamento");
+            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t ¿Inversion\t\t\tValor de Salvamento");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
@@ -49,21 +49,23 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba numero "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + Resultados2[5] + " Generaciones\t\t\t\t\t$ " + inversion.ToString() + "\t\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t" + periodo.ToString() + "meses\t\t\t$ " + Resultados2[5]  + " Generaciones\t\t\t" + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
             }while(cont <= i);
             tiempoT.Stop();
             String tiemTotal = tiempoT.Elapsed.TotalSeconds.ToString();
+            String tiemTotal2 = tiempoT.Elapsed.TotalMinutes.ToString();
             Console.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} SEGUNDOS  \n", tiemTotal);
             outputFile.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} SEGUNDOS  \n", tiemTotal);
+            outputFile.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} MINUTOS  \n", tiemTotal2);
             outputFile.Close();
-            Thread.Sleep(1500);
+            Thread.Sleep(1000);
             Console.WriteLine("\t ABRIENDO REPORTE\n");
             AbrirArchivo("D:\\Archivo.txt");
             Thread.Sleep(1000);
             Console.WriteLine("\t Cerrando\n");
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
         }
 
         public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo)
