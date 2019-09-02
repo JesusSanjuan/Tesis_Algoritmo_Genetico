@@ -49,7 +49,7 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + "meses\t\t\t$ " + Resultados2[5]  + " Generaciones\t\t\t" + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t$ " + Resultados2[5]  + " Generaciones\t\t\t" + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
             }while(cont <= i);
@@ -157,7 +157,7 @@ namespace Tesis_Algoritmo_Genetico
                     break;
                 }
                 i = i + 1;
-            } while (porcentajeconvergencia <(double)99);
+            } while (porcentajeconvergencia <(double)99.5);
             tiempo2.Stop();
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
