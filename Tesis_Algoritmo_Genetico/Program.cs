@@ -13,7 +13,7 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
-            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t ¿Inversion\t\t\tValor de Salvamento");
+            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t ¿Inversion\t\t\tValor de Salvamento");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
