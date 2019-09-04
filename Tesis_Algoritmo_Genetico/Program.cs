@@ -49,7 +49,7 @@ namespace Tesis_Algoritmo_Genetico
                 /**************************************************************************/
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t$ " + Resultados2[5]  + " Generaciones\t\t\t" + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t " + Resultados2[5]  + " Generaciones\t\t\t$ " + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
                 
                 cont = cont + 1;
             }while(cont <= i);
@@ -110,9 +110,12 @@ namespace Tesis_Algoritmo_Genetico
 
                 double probCruz = random2.NextDouble();
 
-                if (probCruz < 0.8)
+                if (probCruz < 0.9)
                 {
-                    hijos_Generados = CruceTotal(padre, cruce1, cruce2);
+                    double m = random.NextDouble();
+                    int aleatorio = random.Next(0, 1);
+                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);
+                    hijos_Generados = CruceTotal(padre, cruce1, cruce2,pprima);
                 }
                 else
                 {
@@ -157,7 +160,7 @@ namespace Tesis_Algoritmo_Genetico
                     break;
                 }
                 i = i + 1;
-            } while (porcentajeconvergencia <(double)99.5);
+            } while (porcentajeconvergencia <(double)99.9);
             tiempo2.Stop();
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
@@ -323,16 +326,16 @@ namespace Tesis_Algoritmo_Genetico
             return padre;
         }
 
-        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2)
+        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, double pprima)
         {
-            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre,pprima);
             cruce1 = DesordenarLista(cruce1);
             cruce2 = DesordenarLista(cruce2);
-            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
+            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre, pprima);
            return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
-        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
+        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre,double pprima)
         {
             List<double> hijos = new List<double>();
             Random random = new Random();
@@ -344,19 +347,18 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
-                //media = mutacion(media, random);
+                media = mutacion(media, pprima, random);
                 hijos.Add(media);
             }
             return hijos;
         }
 
-        static double mutacion(double hijo, Random random)
+        static double mutacion(double hijo, double pprima,Random random)
         {            
-            double mutacion = random.NextDouble();
-            if (mutacion < 0.06)
+            double mutacion = random.NextDouble();            
+            if (mutacion < pprima)
             {
-               // int mutApli = random.Next(1, 1000);
-                return hijo+ Convert.ToDouble(mutacion);
+                return (hijo+ Convert.ToDouble(pprima));
             }
             else
             {
