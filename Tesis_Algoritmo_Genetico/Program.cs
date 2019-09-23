@@ -53,7 +53,7 @@ namespace Tesis_Algoritmo_Genetico
             VS = Convert.ToDouble(vss);
             //VPN = Convert.Todouble(vpn);
             /*Lectura de informacion de datos de VPN*/
-
+             
             Console.WriteLine("\nIntroduzca la cantidad de la poblacion (Numeros pares):  ");
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
@@ -72,8 +72,8 @@ namespace Tesis_Algoritmo_Genetico
 
        
             Random random = new Random();
-            double minimo = aproxInicial - 500;
-            double maximo = aproxInicial + 500;              
+            double minimo = aproxInicial - 1500;
+            double maximo = aproxInicial + 1500;              
 
             List<double> poblacion = new List<double>();
 
