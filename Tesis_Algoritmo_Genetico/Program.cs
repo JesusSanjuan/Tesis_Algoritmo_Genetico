@@ -108,28 +108,41 @@ namespace Tesis_Algoritmo_Genetico
                 List<double> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
                 List<int> cruce1 = posTorneo( 0, padre.Count / 2);
-                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);               
-                
-                List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
+                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);
+
+                /*List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
                 cruce1 = DesordenarLista(cruce1);
                 cruce2 = DesordenarLista(cruce2);
-                List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
-                List<double> hijos_Generados = poblacionnueva1.Concat(poblacionnueva2).ToList();
-                poblacion.Clear();
-                poblacion = padre.Concat(hijos_Generados).ToList();
+                List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);*/
+                List<double> hijos_Generados = new List<double>();
 
-                if (cruce1.Count() != cruce2.Count())
+
+                double probCruz = random.NextDouble();
+
+                if (probCruz < 0.9)
                 {
-                    int numeroAleatorio = new Random().Next(0, padre.Count / 2);
-                    int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
-                    List<double> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
-                    poblacion = poblacion.Concat(hijoimpar).ToList();
+                    double m = random.NextDouble();
+                    int aleatorio = random.Next(0, 1);
+                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);
+                    hijos_Generados = CruceTotal(padre, cruce1, cruce2, pprima);
+                }
+                else
+                {
+                    /* if (c1 != c2)LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     {                        
+                         padre.RemoveAt(random.Next(0, padre.Count));
+                         hijos_Generados = padre;LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     }
+                     elseLO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
+                     {*/
+                    hijos_Generados = padre;
+                    //}LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
                 }
 
                 //Agrupamos la lista
                 //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();      
                 //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
-                
+
                 List<double> contandovalores = new List<double>();
                 List<double> contandovalores2 = new List<double>();
                 /*foreach (var valor in poblacion)
@@ -271,7 +284,7 @@ namespace Tesis_Algoritmo_Genetico
 
                 if (fx1 >= 0 && fx2 >= 0)
                 {
-                    List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                    List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
                     ganador = reorganizacionPos.Min(x => x);
                     indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
                     padrefx.Add(ganador);
@@ -299,7 +312,7 @@ namespace Tesis_Algoritmo_Genetico
                     if (fx1 < -0)
                     {
 
-                        List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
                         ganador = reorganizacionPos.Min(x => x);
                         if (fx1p == ganador)
                         {
@@ -337,9 +350,19 @@ namespace Tesis_Algoritmo_Genetico
             return padre;
         }
 
-        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
+        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, double pprima)
+        {
+            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre, pprima);
+            cruce1 = DesordenarLista(cruce1);
+            cruce2 = DesordenarLista(cruce2);
+            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre, pprima);
+            return poblacionnueva1.Concat(poblacionnueva2).ToList();
+        }
+
+        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre, double pprima)
         {
             List<double> hijos = new List<double>();
+            Random random = new Random();
             for (int i = 0; i < cruce1.Count; i++)
             {
                 double padre1 = padre[cruce1[i]];
@@ -348,9 +371,23 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
+                media = mutacion(media, pprima, random);
                 hijos.Add(media);
             }
             return hijos;
+        }
+
+        static double mutacion(double hijo, double pprima, Random random)
+        {
+            double mutacion = random.NextDouble();
+            if (mutacion < pprima)
+            {
+                return (hijo + Convert.ToDouble(pprima));
+            }
+            else
+            {
+                return hijo;
+            }
         }
 
         static List<double> CruceImpar(double padre1, double padre2)
