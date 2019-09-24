@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Diagnostics;
-
 
 namespace Tesis_Algoritmo_Genetico
 {
@@ -12,7 +9,6 @@ namespace Tesis_Algoritmo_Genetico
     {
         static void Main(string[] args)
         {
-            /*Lectura de informacion de datos de VPN*/
             String inve, per, vss;
             double inversion, VS;
             int periodo;
@@ -22,58 +18,34 @@ namespace Tesis_Algoritmo_Genetico
             per = Console.ReadLine();
             Console.WriteLine("Introduzca el valor de salvamento: ");
             vss = Console.ReadLine();
-            //Console.WriteLine("Introduzca el VPN posible: ");
-            //vpn = Console.ReadLine();
 
             double[] FNE = new double[Convert.ToInt32(per)];
-            /*Random rand0 = new Random();
-            byte[] bytes = new byte[5];
-            rand0.NextBytes(bytes);*/
-
-            //FNE[0] = 1000;
-            //FNE[1] = 2000;
-            //FNE[2] = 1500;
-            //FNE[3] = 3000;
-            //FNE[4] = 400;
-            //FNE[5] = 200;
 
             for (int x = 0; x < Convert.ToInt32(per); x++)
-            {
-                /*Double numeroaleatorio = rand0.NextDouble() * 950000;
-                numeroaleatorio = Math.Round(numeroaleatorio, 4);*/
+            {                
                 Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
                 String temporal= Console.ReadLine();
                 FNE[x] = Convert.ToDouble(temporal);
-                //FNE[x] = 15000;                
-                //Console.Write("\n\tNumero aleatorio de FNE del mes {0}: {1}", x + 1, numeroaleatorio.ToString());
             }
 
             inversion = Convert.ToDouble(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDouble(vss);
-            //VPN = Convert.Todouble(vpn);
-            /*Lectura de informacion de datos de VPN*/
              
             Console.WriteLine("\nIntroduzca la cantidad de la poblacion (Numeros pares):  ");
             String poblacionNumero;
-            poblacionNumero = Console.ReadLine();
+            poblacionNumero = Console.ReadLine();       
 
-            /*Console.WriteLine("Introduzca la convergencia:  ");
-            String convergencia;
-            convergencia = Console.ReadLine();*/          
-
-            Console.WriteLine("\n\nBuscando aproximacion inicial..");
+            Console.WriteLine("\n\nAproximacion inicial..");
 
             Stopwatch tiempo = Stopwatch.StartNew();
 
             double aproxInicial= aproximacioninicial(inversion,FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
-            Console.WriteLine("Generandos numeros aleatorios -100 y +100 entorno a la aproximacion incial\n");
-
        
             Random random = new Random();
-            double minimo = aproxInicial - 500;
-            double maximo = aproxInicial + 500;              
+            double minimo = aproxInicial - 1000;
+            double maximo = aproxInicial + 1000;              
 
             List<double> poblacion = new List<double>();
 
@@ -85,20 +57,12 @@ namespace Tesis_Algoritmo_Genetico
                     poblacion.Add(numeroAleatorio);
                 }
             }
-           /* Console.WriteLine("____________________________\n");                     
-            Console.WriteLine("Imprimiendo Poblacion inicial:");
-             foreach (float contenido in poblacion)
-             {
-                 Console.WriteLine("{0}", contenido.ToString());
-             }
-            Console.WriteLine("____________________________\n");
-            Console.WriteLine("Evaluando, Buscando convergencia del 95%");
-            Console.WriteLine("____________________________\n\n\n");*/
-            //Console.ReadKey();
+
             int i = 1;
             double porcentajeconvergencia = 0;
             double porcentaje = (((double)100) / Int32.Parse(poblacionNumero));
             List<double> ResultadosFX;
+            Random random2 = new Random();
             do
             {                
                 ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
@@ -110,52 +74,29 @@ namespace Tesis_Algoritmo_Genetico
                 List<int> cruce1 = posTorneo( 0, padre.Count / 2);
                 List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);
 
-                /*List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre);
-                cruce1 = DesordenarLista(cruce1);
-                cruce2 = DesordenarLista(cruce2);
-                List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);*/
                 List<double> hijos_Generados = new List<double>();
 
-
-                double probCruz = random.NextDouble();
+                double probCruz = random2.NextDouble();
 
                 if (probCruz < 0.9)
                 {
-                    double m = random.NextDouble();
-                    int aleatorio = random.Next(0, 1);
-                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);
-                    hijos_Generados = CruceTotal(padre, cruce1, cruce2, pprima);
+                    hijos_Generados = CruceTotal(padre, cruce1, cruce2, i);
                 }
                 else
                 {
-                    /* if (c1 != c2)LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     {                        
-                         padre.RemoveAt(random.Next(0, padre.Count));
-                         hijos_Generados = padre;LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     }
-                     elseLO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     {*/
                     hijos_Generados = padre;
-                    //}LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
                 }
-
-                //Agrupamos la lista
-                //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();      
-                //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
 
                 poblacion.Clear();
                 poblacion = padre.Concat(hijos_Generados).ToList();
                 poblacion = DesordenarLista(poblacion);
 
-
-
-
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => g.Count()).ToList();
-                agrupacion =agrupacion.OrderByDescending(o => o).ToList();                
-                var agrupacion2= agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
-                var agrupacion3 = agrupacion.GroupBy(x => x).Select(g =>  g.Key).ToList();
+                agrupacion = agrupacion.OrderByDescending(o => o).ToList();
+                var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+                var agrupacion3 = agrupacion.GroupBy(x => x).Select(g => g.Key).ToList();
                 var valormax = agrupacion3.Max();
-               
+
                 foreach (var el in agrupacion2)
                 {
                     if(el.Text==valormax && el.Count == 1)
@@ -164,12 +105,12 @@ namespace Tesis_Algoritmo_Genetico
                         porcentajeconvergencia = porcentaje * valor;
                         
                         Console.WriteLine("\t****************************\n");
-                        Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
-                        break;
+                        Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);                        
                     }
+                    break;
                 }
                 i = i + 1;              
-            } while (porcentajeconvergencia < (double)95);
+            } while (porcentajeconvergencia < (double)99.9);
             tiempo.Stop();
 
 
@@ -180,20 +121,10 @@ namespace Tesis_Algoritmo_Genetico
             var resultTMR = ResultadosFX.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTMR = resultTMR.OrderByDescending(o => o.Count).ToList();
             Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo la Poblacion de la generacion {0} final: ", i);
-            foreach (double contenido in poblacion)
-            {
-                Console.WriteLine("\t{0}", contenido.ToString());
-            }
-            Console.WriteLine("____________________________\n");
-            Console.WriteLine("Imprimiendo la ResultadoFX de la generacion {0} final: ", i);
-            foreach (double contenido in ResultadosFX)
-            {
-                Console.WriteLine("\t{0}", contenido.ToString());
-            }
+           
             Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", resultTMR[0].Text);
             Console.WriteLine("\n\t\t RESULTADO TIR: {0}", resultTIR[0].Text);
-            Console.WriteLine("\n\nEL ALGORITMO A TERMINADO LA BUSQUEDA\n\n");   
+            Console.WriteLine("\n\nEL ALGORITMO TERMINO LA BUSQUEDA\n\n");   
             
             Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
             Console.ReadKey();
@@ -274,7 +205,6 @@ namespace Tesis_Algoritmo_Genetico
                 tem.Add(fx1);
                 tem.Add(fx2);
 
-
                 double ganador = 0;
                 int indexganadorPob = 0;
 
@@ -307,7 +237,6 @@ namespace Tesis_Algoritmo_Genetico
 
                     if (fx1 < -0)
                     {
-
                         List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
                         ganador = reorganizacionPos.Min(x => x);
                         if (fx1p == ganador)
@@ -322,7 +251,6 @@ namespace Tesis_Algoritmo_Genetico
                             padrefx.Add(fx2);
                             padre.Add(poblacion[indexganadorPob]);
                         }
-
                     }
                     else
                     {
@@ -346,19 +274,19 @@ namespace Tesis_Algoritmo_Genetico
             return padre;
         }
 
-        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, double pprima)
+        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, double iteracion)
         {
-            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre, pprima);
+            List<double> poblacionnueva1a = Cruce(cruce1, cruce2, padre);
+            List<double> poblacionnueva1 = mutacion(poblacionnueva1a);
             cruce1 = DesordenarLista(cruce1);
             cruce2 = DesordenarLista(cruce2);
-            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre, pprima);
+            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre);
             return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
-        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre, double pprima)
+        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
         {
             List<double> hijos = new List<double>();
-            Random random = new Random();
             for (int i = 0; i < cruce1.Count; i++)
             {
                 double padre1 = padre[cruce1[i]];
@@ -367,23 +295,43 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
-                media = mutacion(media, pprima, random);
+               // media = mutacion(media, pprima, random);
                 hijos.Add(media);
             }
             return hijos;
         }
 
-        static double mutacion(double hijo, double pprima, Random random)
+        static List<double> mutacion(List<double> poblacion1)
         {
-            double mutacion = random.NextDouble();
-            if (mutacion < pprima)
+
+            double mediageometrica = poblacion1.Sum()/poblacion1.Count;
+            double sumatoria = 0;
+            for(int i=0; i<poblacion1.Count;i++)
             {
-                return (hijo + Convert.ToDouble(pprima));
+                sumatoria = sumatoria + Math.Pow((poblacion1[0]- mediageometrica),2);
             }
-            else
+
+            double desviasion = Math.Sqrt(sumatoria / (poblacion1.Count - 1));
+
+            //double result = Math.NormalDistribution(1.96);
+            for (int i = 0; i < poblacion1.Count; i++)
             {
-                return hijo;
+                double z = (poblacion1[i] - mediageometrica) / desviasion;
             }
+            /* double longitud = Convert.ToString(hijo).Length;
+
+             double p = Math.Pow(2 + (((longitud-2) /(100 - 1))*pprima), -1);
+             //double mutacion = random.NextDouble();
+             if (p < 0.5)
+             {
+                 return (hijo + p);
+             }
+             else
+             {
+                 return hijo;
+             }*/
+
+            return null;
         }
 
         static List<double> CruceImpar(double padre1, double padre2)
