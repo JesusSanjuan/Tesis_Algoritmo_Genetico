@@ -72,8 +72,8 @@ namespace Tesis_Algoritmo_Genetico
 
        
             Random random = new Random();
-            double minimo = aproxInicial - 1500;
-            double maximo = aproxInicial + 1500;              
+            double minimo = aproxInicial - 500;
+            double maximo = aproxInicial + 500;              
 
             List<double> poblacion = new List<double>();
 
@@ -143,14 +143,10 @@ namespace Tesis_Algoritmo_Genetico
                 //var agrupacion = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();      
                 //var agrupacioncont = poblacion.GroupBy(x => x).Select(g => new { Count = g.Count() }).ToList();
 
-                List<double> contandovalores = new List<double>();
-                List<double> contandovalores2 = new List<double>();
-                /*foreach (var valor in poblacion)
-                {
-                    contandovalores.Add(valor);
-                    contandovalores2 .Add( poblacion.Where(x => x == valor).Count());
-                    
-                }*/
+                poblacion.Clear();
+                poblacion = padre.Concat(hijos_Generados).ToList();
+                poblacion = DesordenarLista(poblacion);
+
 
 
 
