@@ -309,7 +309,7 @@ namespace Tesis_Algoritmo_Genetico
                 double longitud = Convert.ToString(poblacion1[i]).Length-1;
                 double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
                // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
-                if (p > .5)//AQUI PERMITE LA MUTACION
+                if (p > .6)//AQUI PERMITE LA MUTACION
                 {
                     double mediageometrica = poblacion1.Sum() / poblacion1.Count;
                     double desviasion =desviasionstandar(poblacion1, mediageometrica);
