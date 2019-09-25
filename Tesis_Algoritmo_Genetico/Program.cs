@@ -305,17 +305,17 @@ namespace Tesis_Algoritmo_Genetico
         {            
             for (int i = 0; i < poblacion1.Count; i++)
             {
-                double numeroAleatorio = random.NextDouble();
+               // double numeroAleatorio = random.NextDouble();
                 double longitud = Convert.ToString(poblacion1[i]).Length-1;
                 double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
                // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
-                if (p > .6)//AQUI PERMITE LA MUTACION
+                if (p > .1)//AQUI PERMITE LA MUTACION lgo invertido
                 {
                     double mediageometrica = poblacion1.Sum() / poblacion1.Count;
                     double desviasion =desviasionstandar(poblacion1, mediageometrica);
                     double z = (poblacion1[i] - mediageometrica) / desviasion;
                     poblacion1[i] = poblacion1[i] + z;
-                    //Console.WriteLine("\n\t\t\t\tMUTACION");
+                    Console.WriteLine("\n\t\t\t\tMUTACION");
                 }
                 else
                 {
