@@ -109,7 +109,7 @@ namespace Tesis_Algoritmo_Genetico
                 Console.WriteLine("\t****************************\n");
                 Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
                 i = i + 1;              
-            } while (porcentajeconvergencia < (double)99.5);
+            } while (porcentajeconvergencia < (double)99.9);
             tiempo.Stop();
 
 
@@ -315,7 +315,7 @@ namespace Tesis_Algoritmo_Genetico
                     double desviasion =desviasionstandar(poblacion1, mediageometrica);
                     double z = (poblacion1[i] - mediageometrica) / desviasion;
                     poblacion1[i] = poblacion1[i] + z;
-                    Console.WriteLine("\n\t\t\t\tMUTACION");
+                    //Console.WriteLine("\n\t\t\t\tMUTACION");
                 }
                 else
                 {
