@@ -348,7 +348,7 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
-                media = mutacion(media, pprima, random);
+                //media = mutacion(media, pprima, random);
                 hijos.Add(media);
             }
             return hijos;
