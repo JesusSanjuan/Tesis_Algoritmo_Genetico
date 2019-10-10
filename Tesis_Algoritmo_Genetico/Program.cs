@@ -142,6 +142,7 @@ namespace Tesis_Algoritmo_Genetico
 
             double x0;
             double t1 = sumainferior / Inversion;
+            t1 = Math.Abs(t1);
             double t2 = 1 / resultado;
             x0 = Math.Pow(t1, t2);
             x0 = (x0 - 1) * 100;
