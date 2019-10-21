@@ -72,11 +72,11 @@ namespace Tesis_Algoritmo_Genetico
         {
             Stopwatch tiempo2 = Stopwatch.StartNew();
             double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
-            int poblacionNumero = 1000;
+            int poblacionNumero = 480;
 
             Random random = new Random();
-            double minimo = aproxInicial - 1000;
-            double maximo = aproxInicial + 1000;
+            double minimo = aproxInicial - 2500;
+            double maximo = aproxInicial + 2500;
 
             List<double> poblacion = new List<double>();
 
@@ -112,10 +112,10 @@ namespace Tesis_Algoritmo_Genetico
 
                 if (probCruz < 0.9)
                 {
-                    double m = random.NextDouble();
+                    /*double m = random.NextDouble();
                     int aleatorio = random.Next(0, 1);
-                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);
-                    hijos_Generados = CruceTotal(padre, cruce1, cruce2,pprima);
+                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);*/
+                    hijos_Generados = CruceTotal(padre, cruce1, cruce2,i);
                 }
                 else
                 {
@@ -327,16 +327,19 @@ namespace Tesis_Algoritmo_Genetico
             return padre;
         }
 
-        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, double pprima)
+        static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, int iteracion)
         {
-            List<double> poblacionnueva1 = Cruce(cruce1, cruce2, padre,pprima);
+            Random random = new Random();
+            List<double> poblacionnueva1a = Cruce(cruce1, cruce2, padre);
+            List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion, random);
             cruce1 = DesordenarLista(cruce1);
             cruce2 = DesordenarLista(cruce2);
-            List<double> poblacionnueva2 = Cruce(cruce1, cruce2, padre, pprima);
-           return poblacionnueva1.Concat(poblacionnueva2).ToList();
+            List<double> poblacionnueva2a = Cruce(cruce1, cruce2, padre);
+            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion, random);
+            return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
-        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre,double pprima)
+        static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
         {
             List<double> hijos = new List<double>();
             Random random = new Random();
@@ -354,17 +357,38 @@ namespace Tesis_Algoritmo_Genetico
             return hijos;
         }
 
-        static double mutacion(double hijo, double pprima,Random random)
-        {            
-            double mutacion = random.NextDouble();            
-            if (mutacion < pprima)
+        static List<double> mutacion(List<double> poblacion1, int iteracion, Random random)
+        {
+            for (int i = 0; i < poblacion1.Count; i++)
             {
-                return (hijo+ Convert.ToDouble(pprima));
+                // double numeroAleatorio = random.NextDouble();
+                double longitud = Convert.ToString(poblacion1[i]).Length - 1;
+                double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
+                // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
+                if (p > .1)//AQUI PERMITE LA MUTACION lgo invertido
+                {
+                    double mediageometrica = poblacion1.Sum() / poblacion1.Count;
+                    double desviasion = desviasionstandar(poblacion1, mediageometrica);
+                    double z = (poblacion1[i] - mediageometrica) / desviasion;
+                    poblacion1[i] = poblacion1[i] + z;
+                    //Console.WriteLine("\n\t\t\t\tMUTACION");
+                }
+                else
+                {
+                    poblacion1[i] = poblacion1[i];
+                }
             }
-            else
+            return poblacion1;
+        }
+
+        static double desviasionstandar(List<double> poblacion1, double mediageometrica)
+        {
+            double sumatoria = 0;
+            for (int i = 0; i < poblacion1.Count; i++)
             {
-                return hijo;
-            }            
+                sumatoria = sumatoria + Math.Pow((poblacion1[0] - mediageometrica), 2);
+            }
+            return Math.Sqrt(sumatoria / (poblacion1.Count - 1));
         }
 
         static List<double> CruceImpar(double padre1, double padre2)
