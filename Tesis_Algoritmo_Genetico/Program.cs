@@ -72,7 +72,7 @@ namespace Tesis_Algoritmo_Genetico
         {
             Stopwatch tiempo2 = Stopwatch.StartNew();
             double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
-            int poblacionNumero = 480;
+            int poblacionNumero = 240;
 
             Random random = new Random();
             double minimo = aproxInicial - 2500;
