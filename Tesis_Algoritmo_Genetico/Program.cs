@@ -12,35 +12,6 @@ namespace Tesis_Algoritmo_Genetico
             String inve, per, vss;
             double inversion, VS;
             int periodo;
-
-
-          /*  List<double> elementos = new List<double>() {
-            1.5,
-            2.5,
-            3.5
-            };
-
-            List<double> elementos2 = new List<double>() {
-            4.5,
-            5.5,
-            6.5
-            };
-
-
-            List<List<double>> visitasXGrupos = new List<List<double>>();
-
-            visitasXGrupos.Add(elementos);
-            visitasXGrupos.Add(elementos2);
-
-            foreach (var item in visitasXGrupos)
-            {
-                foreach (var item2 in item)
-                {
-
-                }
-             }*/
-
-
             Console.WriteLine("Introduzca la inversion (P):  ");
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el periodo (N) Meses: ");
@@ -51,30 +22,30 @@ namespace Tesis_Algoritmo_Genetico
             double[] FNE = new double[Convert.ToInt32(per)];
 
             for (int x = 0; x < Convert.ToInt32(per); x++)
-            {                
-                Console.WriteLine("\tIntroduzca el FNE {0}: ", x+1);
-                String temporal= Console.ReadLine();
+            {
+                Console.WriteLine("\tIntroduzca el FNE {0}: ", x + 1);
+                String temporal = Console.ReadLine();
                 FNE[x] = Convert.ToDouble(temporal);
             }
 
             inversion = Convert.ToDouble(inve);
             periodo = Convert.ToInt32(per);
             VS = Convert.ToDouble(vss);
-             
+
             Console.WriteLine("\nIntroduzca la cantidad de la poblacion (Numeros pares):  ");
             String poblacionNumero;
-            poblacionNumero = Console.ReadLine();       
+            poblacionNumero = Console.ReadLine();
 
             Console.WriteLine("\n\nAproximacion inicial..");
 
             Stopwatch tiempo = Stopwatch.StartNew();
 
-            double aproxInicial= aproximacioninicial(inversion,FNE, periodo);
+            double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
             Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
-       
+
             Random random = new Random();
             double minimo = aproxInicial - 1000;
-            double maximo = aproxInicial + 1000;              
+            double maximo = aproxInicial + 1000;
 
             List<double> poblacion = new List<double>();
 
@@ -93,15 +64,15 @@ namespace Tesis_Algoritmo_Genetico
             List<double> ResultadosFX;
             Random random2 = new Random();
             do
-            {                
+            {
                 ResultadosFX = fx(inversion, FNE, VS, poblacion, periodo);
 
-                List<int> torneo1 = posTorneo( 0, poblacion.Count / 2);
-                List<int> torneo2 = posTorneo( poblacion.Count / 2, poblacion.Count);
+                List<int> torneo1 = posTorneo(0, poblacion.Count / 2);
+                List<int> torneo2 = posTorneo(poblacion.Count / 2, poblacion.Count);
                 List<double> padre = Seleccion(torneo1, torneo2, ResultadosFX, poblacion);
 
-                List<int> cruce1 = posTorneo( 0, padre.Count / 2);
-                List<int> cruce2 = posTorneo( padre.Count / 2, padre.Count);
+                List<int> cruce1 = posTorneo(0, padre.Count / 2);
+                List<int> cruce2 = posTorneo(padre.Count / 2, padre.Count);
 
                 List<double> hijos_Generados = new List<double>();
 
@@ -128,17 +99,17 @@ namespace Tesis_Algoritmo_Genetico
 
                 foreach (var el in agrupacion2)
                 {
-                    if(el.Text==valormax && el.Count == 1)
+                    if (el.Text == valormax && el.Count == 1)
                     {
-                        double valor = Convert.ToDouble(el.Text);                        
-                        porcentajeconvergencia = porcentaje * valor;   
+                        double valor = Convert.ToDouble(el.Text);
+                        porcentajeconvergencia = porcentaje * valor;
                     }
                     break;
                 }
                 Console.WriteLine("\t****************************\n");
                 Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
-                i = i + 1;              
-            } while (porcentajeconvergencia < (double)99.5);
+                i = i + 1;
+            } while (porcentajeconvergencia < (double)99.9);
             tiempo.Stop();
 
 
@@ -149,12 +120,55 @@ namespace Tesis_Algoritmo_Genetico
             var resultTMR = ResultadosFX.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTMR = resultTMR.OrderByDescending(o => o.Count).ToList();
             Console.WriteLine("____________________________\n");
-           
+
             Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", resultTMR[0].Text);
             Console.WriteLine("\n\t\t RESULTADO TIR: {0}", resultTIR[0].Text);
-            Console.WriteLine("\n\nEL ALGORITMO TERMINO LA BUSQUEDA\n\n");   
-            
+            Console.WriteLine("\n\nEL ALGORITMO TERMINO LA BUSQUEDA\n\n");
+
             Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
+
+            Console.WriteLine("\n\n_______________________________________\n\n");
+            Console.WriteLine("\n\n___________OPTIMIZANDO_FNE_____________\n\n");
+
+            /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
+            List<double> FNEList = FNE.ToList();
+            double FNEMax= FNEList.Max();
+            double FNEMin = FNEList.Min();
+
+            List<List<double>> poblacion2 = new List<List<double>>();
+
+            while (poblacion2.Count < Int32.Parse(poblacionNumero))
+            {          
+                List<double> poblaciontem = new List<double>();
+                while (poblaciontem.Count < Convert.ToInt32(per))
+                {
+                    double numeroAleatorio = random.NextDouble() * ((FNEMax+1) - (FNEMin-1)) + (FNEMin-1);
+                    if (!poblaciontem.Contains(numeroAleatorio))
+                    {
+                        poblaciontem.Add(numeroAleatorio);
+                    }
+                }
+                poblacion2.Add(poblaciontem);
+            }
+
+            int J = 1;
+            double porcentajeconvergencia2 = 0;
+            double porcentaje2 = (((double)100) / Int32.Parse(poblacionNumero));
+            List<double> ResultadosFX2;
+            Random random2b = new Random();
+
+
+            do
+            {
+                ResultadosFX = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
+
+                List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
+                List<int> torneo2b = posTorneo(poblacion2.Count / 2, poblacion2.Count);
+                List<double> padre = SeleccionFNE(torneo1b, torneo2b, ResultadosFX, poblacion2);
+
+            } while (porcentajeconvergencia < (double)99.9);
+
+            /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
             Console.ReadKey();
         }
 
@@ -171,6 +185,7 @@ namespace Tesis_Algoritmo_Genetico
 
             double x0;
             double t1 = sumainferior / Inversion;
+            t1 = Math.Abs(t1);
             double t2 = 1 / resultado;
             x0 = Math.Pow(t1, t2);
             x0 = (x0 - 1) * 100;
@@ -306,11 +321,11 @@ namespace Tesis_Algoritmo_Genetico
         {
             Random random = new Random();
             List<double> poblacionnueva1a = Cruce(cruce1, cruce2, padre);
-            List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion,random);
+            List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion, random);
             cruce1 = DesordenarLista(cruce1);
             cruce2 = DesordenarLista(cruce2);
             List<double> poblacionnueva2a = Cruce(cruce1, cruce2, padre);
-            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion,random);
+            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion, random);
             return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
@@ -331,20 +346,20 @@ namespace Tesis_Algoritmo_Genetico
         }
 
         static List<double> mutacion(List<double> poblacion1, int iteracion, Random random)
-        {            
+        {
             for (int i = 0; i < poblacion1.Count; i++)
             {
-               // double numeroAleatorio = random.NextDouble();
-                double longitud = Convert.ToString(poblacion1[i]).Length-1;
+                // double numeroAleatorio = random.NextDouble();
+                double longitud = Convert.ToString(poblacion1[i]).Length - 1;
                 double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
-               // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
+                // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
                 if (p > .1)//AQUI PERMITE LA MUTACION lgo invertido
                 {
                     double mediageometrica = poblacion1.Sum() / poblacion1.Count;
-                    double desviasion =desviasionstandar(poblacion1, mediageometrica);
+                    double desviasion = desviasionstandar(poblacion1, mediageometrica);
                     double z = (poblacion1[i] - mediageometrica) / desviasion;
                     poblacion1[i] = poblacion1[i] + z;
-                    Console.WriteLine("\n\t\t\t\tMUTACION");
+                    //Console.WriteLine("\n\t\t\t\tMUTACION");
                 }
                 else
                 {
@@ -355,7 +370,7 @@ namespace Tesis_Algoritmo_Genetico
         }
 
         static double desviasionstandar(List<double> poblacion1, double mediageometrica)
-        {            
+        {
             double sumatoria = 0;
             for (int i = 0; i < poblacion1.Count; i++)
             {
@@ -400,8 +415,112 @@ namespace Tesis_Algoritmo_Genetico
                 valorinferiorF = Double.MinValue;
             }
             FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
-            fVPN = FNEAcumulado - Inversion;
+            fVPN = - Inversion + FNEAcumulado ;
             return fVPN;
         }
+
+        /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO (inversion, poblacion, VS, Tir , periodo);*/
+        static List<double> fxFNE(double Inversion, List<List<double>> poblacion, double VS, double tir, int Periodo)
+        {
+            List<double> ResultadosFX = new List<double>();
+            double valorFX = 0;
+            foreach (List<double> contenido in poblacion)
+            {
+                double[] array = contenido.ToArray();
+                valorFX = CalcularVPN(Inversion, array, VS, tir / 100, Periodo);
+                ResultadosFX.Add(valorFX);
+            }
+            return ResultadosFX;
+        }
+
+        static List<double> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion)
+        {
+            List<double> padre = new List<double>();
+            List<double> padrefx = new List<double>();
+
+            for (int i = 0; i < p1.Count; i++)
+            {
+                double fx1 = ResultadosFX[p1[i]];
+                double fx2 = ResultadosFX[p2[i]];
+
+               /* double pob1 = poblacion[p1[i]];
+                double pob2 = poblacion[p2[i]];
+
+                List<double> tem = new List<double>();
+                tem.Add(fx1);
+                tem.Add(fx2);
+
+                double ganador = 0;
+                int indexganadorPob = 0;
+
+                if (fx1 >= 0 && fx2 >= 0)
+                {
+                    List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
+                    ganador = reorganizacionPos.Min(x => x);
+                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
+                }
+                else if (fx1 < -0 && fx2 < -0)
+                {
+                    List<double> reorganizacionNega = tem.Where(x => x < 0).ToList();
+                    ganador = reorganizacionNega.Max(x => x);
+                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
+                }
+                else
+                {
+                    double fx1p, fx2p;
+                    fx1p = Math.Abs(fx1);
+                    fx2p = Math.Abs(fx2);
+
+                    tem.Clear();
+
+                    tem.Add(fx1p);
+                    tem.Add(fx2p);
+
+                    if (fx1 < -0)
+                    {
+                        List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
+                        ganador = reorganizacionPos.Min(x => x);
+                        if (fx1p == ganador)
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx1);
+                            padrefx.Add(fx1);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                        else
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx2p);
+                            padrefx.Add(fx2);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                    }
+                    else
+                    {
+                        List<double> reorganizacionPos = tem.Where(x => x > 0).ToList();
+                        ganador = reorganizacionPos.Min(x => x);
+                        if (fx2p == ganador)
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx2);
+                            padrefx.Add(fx2);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                        else
+                        {
+                            indexganadorPob = ResultadosFX.FindIndex(x => x == fx1p);
+                            padrefx.Add(fx1);
+                            padre.Add(poblacion[indexganadorPob]);
+                        }
+                    }
+                }*/
+            }
+            return padre;
+        }
+
+        /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
+
+
     }
 }
