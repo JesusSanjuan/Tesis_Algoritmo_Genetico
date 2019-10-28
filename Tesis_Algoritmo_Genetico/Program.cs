@@ -12,6 +12,35 @@ namespace Tesis_Algoritmo_Genetico
             String inve, per, vss;
             double inversion, VS;
             int periodo;
+
+
+          /*  List<double> elementos = new List<double>() {
+            1.5,
+            2.5,
+            3.5
+            };
+
+            List<double> elementos2 = new List<double>() {
+            4.5,
+            5.5,
+            6.5
+            };
+
+
+            List<List<double>> visitasXGrupos = new List<List<double>>();
+
+            visitasXGrupos.Add(elementos);
+            visitasXGrupos.Add(elementos2);
+
+            foreach (var item in visitasXGrupos)
+            {
+                foreach (var item2 in item)
+                {
+
+                }
+             }*/
+
+
             Console.WriteLine("Introduzca la inversion (P):  ");
             inve = Console.ReadLine();
             Console.WriteLine("Introduzca el periodo (N) Meses: ");
