@@ -151,7 +151,7 @@ namespace Tesis_Algoritmo_Genetico
                 poblacion2.Add(poblaciontem);
             }
 
-            int J = 1;
+            int j = 1;
             double porcentajeconvergencia2 = 0;
             double porcentaje2 = (((double)100) / Int32.Parse(poblacionNumero));
             List<double> ResultadosFX2;
@@ -160,13 +160,34 @@ namespace Tesis_Algoritmo_Genetico
 
             do
             {
-                ResultadosFX = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
+                ResultadosFX2 = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
 
                 List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
                 List<int> torneo2b = posTorneo(poblacion2.Count / 2, poblacion2.Count);
-                List<double> padre = SeleccionFNE(torneo1b, torneo2b, ResultadosFX, poblacion2);
+                List<List<double>> padre = SeleccionFNE(torneo1b, torneo2b, ResultadosFX2, poblacion2, inversion);
 
-            } while (porcentajeconvergencia < (double)99.9);
+                List<int> cruce1b = posTorneo(0, padre.Count / 2);
+                List<int> cruce2b = posTorneo(padre.Count / 2, padre.Count);
+
+                List<List<double>> hijos_Generadosb = new List<List<double>>();
+
+                double probCruzb = random2b.NextDouble();
+
+                if (probCruzb < 0.9)
+                {
+                    hijos_Generadosb = CruceTotal2(padre, cruce1b, cruce2b, j);
+                }
+                else
+                {
+                    hijos_Generadosb = padre;
+                }
+
+
+
+
+
+                j = j + 1;
+            } while (porcentajeconvergencia2 < (double)99.9);
 
             /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
             Console.ReadKey();
@@ -433,9 +454,9 @@ namespace Tesis_Algoritmo_Genetico
             return ResultadosFX;
         }
 
-        static List<double> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion)
+        static List<List<double>> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion, double inversion)
         {
-            List<double> padre = new List<double>();
+            List<List<double>> padre = new List<List<double>>();
             List<double> padrefx = new List<double>();
 
             for (int i = 0; i < p1.Count; i++)
@@ -443,8 +464,8 @@ namespace Tesis_Algoritmo_Genetico
                 double fx1 = ResultadosFX[p1[i]];
                 double fx2 = ResultadosFX[p2[i]];
 
-               /* double pob1 = poblacion[p1[i]];
-                double pob2 = poblacion[p2[i]];
+                List<double> pob1 = poblacion[p1[i]];
+                List<double> pob2 = poblacion[p2[i]];
 
                 List<double> tem = new List<double>();
                 tem.Add(fx1);
@@ -453,29 +474,34 @@ namespace Tesis_Algoritmo_Genetico
                 double ganador = 0;
                 int indexganadorPob = 0;
 
-                if (fx1 >= 0 && fx2 >= 0)
+                ganador = tem.Max(x => x);
+                indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                padrefx.Add(ganador);
+                padre.Add(poblacion[indexganadorPob]);
+
+               /* if (fx1 < inversion && fx2 < inversion)
                 {
-                    List<double> reorganizacionPos = tem.Where(x => x >= 0).ToList();
+                    //List<double> reorganizacionNega = tem.Where(x => x < inversion).ToList();
+                    ganador = tem.Max(x => x);
+                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
+                }
+                else if(fx1 >= inversion && fx2 >= inversion)
+                {
+                    List<double> reorganizacionPos = tem.Where(x => x >= inversion).ToList();
                     ganador = reorganizacionPos.Min(x => x);
                     indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
                     padrefx.Add(ganador);
                     padre.Add(poblacion[indexganadorPob]);
                 }
-                else if (fx1 < -0 && fx2 < -0)
-                {
-                    List<double> reorganizacionNega = tem.Where(x => x < 0).ToList();
-                    ganador = reorganizacionNega.Max(x => x);
-                    indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
-                    padrefx.Add(ganador);
-                    padre.Add(poblacion[indexganadorPob]);
-                }
-                else
+                /*  else
                 {
                     double fx1p, fx2p;
                     fx1p = Math.Abs(fx1);
                     fx2p = Math.Abs(fx2);
 
-                    tem.Clear();
+                   tem.Clear();
 
                     tem.Add(fx1p);
                     tem.Add(fx2p);
@@ -517,6 +543,41 @@ namespace Tesis_Algoritmo_Genetico
                 }*/
             }
             return padre;
+        }
+
+        static List<double> CruceTotal2(List<List<double>> padre, List<int> cruce1, List<int> cruce2, int iteracion)
+        {
+            Random random = new Random();
+            List<List<double>> poblacionnueva1a = Cruce2(cruce1, cruce2, padre);
+            /*List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion, random);
+            cruce1 = DesordenarLista(cruce1);
+            cruce2 = DesordenarLista(cruce2);
+            List<double> poblacionnueva2a = Cruce2(cruce1, cruce2, padre);
+            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion, random);*/   ////AQUI ME QUEDE
+            return poblacionnueva1.Concat(poblacionnueva2).ToList();
+        }
+
+        static List<List<double>> Cruce2(List<int> cruce1, List<int> cruce2, List<List<double>> padre)
+        {
+            List<List<double>> hijos = new List<List<double>>();
+            List<double> crucemedias = new List<double>();
+            for (int i = 0; i < cruce1.Count; i++)
+            {
+                List<double> padre1 = padre[cruce1[i]];
+                List<double> padre2 = padre[cruce2[i]];
+
+                for (int j = 0; j < padre1.Count; j++)
+                {
+                    double media = (padre1[j] + padre2[j]) / 2;
+                    crucemedias.Add(media);
+                }
+
+                    //double media = (padre1 + padre2) / 2;
+                //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
+                //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
+                hijos.Add(crucemedias);
+            }
+            return hijos;
         }
 
         /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
