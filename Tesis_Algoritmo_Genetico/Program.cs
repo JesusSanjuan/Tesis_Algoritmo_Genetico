@@ -160,6 +160,11 @@ namespace Tesis_Algoritmo_Genetico
 
             do
             {
+                if (porcentajeconvergencia2 == 150)
+                {
+                    Console.WriteLine("\t****************************\n");
+                }
+
                 ResultadosFX2 = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
 
                 List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
@@ -184,12 +189,7 @@ namespace Tesis_Algoritmo_Genetico
 
                 poblacion2.Clear();
                 poblacion2 = padre2.Concat(hijos_Generadosb).ToList();
-                poblacion2 = DesordenarLista(poblacion2);
-
-                if(j==150)
-                {
-                    Console.WriteLine("\t****************************\n");
-                }
+                poblacion2 = DesordenarLista(poblacion2);                
 
                 /*COMPROBAR CONVERGENCIA AUN NO ES CORRECTO*/
                 var agrupacion = poblacion2.GroupBy(x => x).Select(g => g.Count()).ToList();
