@@ -160,7 +160,7 @@ namespace Tesis_Algoritmo_Genetico
 
             do
             {
-                if (porcentajeconvergencia2 == 150)
+                if (porcentajeconvergencia2 >= 40 && porcentajeconvergencia2 <=50)
                 {
                     Console.WriteLine("\t****************************\n");
                 }
