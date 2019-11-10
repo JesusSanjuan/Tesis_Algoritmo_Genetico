@@ -132,17 +132,17 @@ namespace Tesis_Algoritmo_Genetico
             Console.ReadKey();
             /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
             List<double> FNEList = FNE.ToList();
-            double FNEMax= FNEList.Max();
+            double FNEMax = FNEList.Max();
             double FNEMin = FNEList.Min();
 
             List<List<double>> poblacion2 = new List<List<double>>();
 
             while (poblacion2.Count < Int32.Parse(poblacionNumero))
-            {          
+            {
                 List<double> poblaciontem = new List<double>();
                 while (poblaciontem.Count < Convert.ToInt32(per))
                 {
-                    double numeroAleatorio = random.NextDouble() * ((FNEMax+1) - (FNEMin-1)) + (FNEMin-1);
+                    double numeroAleatorio = random.NextDouble() * ((FNEMax + 1) - (FNEMin - 1)) + (FNEMin - 1);
                     if (!poblaciontem.Contains(numeroAleatorio))
                     {
                         poblaciontem.Add(numeroAleatorio);
@@ -160,16 +160,17 @@ namespace Tesis_Algoritmo_Genetico
 
             do
             {
-                if (porcentajeconvergencia2 >= 40 && porcentajeconvergencia2 <=50)
+                if (porcentajeconvergencia2 >= 40 && porcentajeconvergencia2 <= 50)
                 {
                     Console.WriteLine("\t****************************\n");
                 }
+
 
                 ResultadosFX2 = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
 
                 List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
                 List<int> torneo2b = posTorneo(poblacion2.Count / 2, poblacion2.Count);
-                List<List<double>> padre2 = SeleccionFNE(torneo1b, torneo2b, ResultadosFX2, poblacion2, inversion);
+                List<List<double>> padre2 = SeleccionFNE(torneo1b, torneo2b, ResultadosFX2, poblacion2);
 
                 List<int> cruce1b = posTorneo(0, padre2.Count / 2);
                 List<int> cruce2b = posTorneo(padre2.Count / 2, padre2.Count);
@@ -189,10 +190,24 @@ namespace Tesis_Algoritmo_Genetico
 
                 poblacion2.Clear();
                 poblacion2 = padre2.Concat(hijos_Generadosb).ToList();
-                poblacion2 = DesordenarLista(poblacion2);                
+                // poblacion2 = DesordenarLista(poblacion2);                
 
                 /*COMPROBAR CONVERGENCIA AUN NO ES CORRECTO*/
+                if (j == 20)
+                {
+
+                }
+                int[] repeticiones=medir_convergencia(poblacion2);
                 var agrupacion = poblacion2.GroupBy(x => x).Select(g => g.Count()).ToList();
+                /*  var query = poblacion2.GroupBy(x => x)
+                .Where(g => g.Count() > 0)
+                .Select(y => new { Element = y.Key, Counter = y.Count() })
+                .ToList();
+                  var query2 = poblacion2.GroupBy(x => x)
+                .Where(g => g.Count() > 0)
+                .ToDictionary(x => x.Key, y => y.Count());*/
+
+
                 agrupacion = agrupacion.OrderByDescending(o => o).ToList();
                 var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
                 var agrupacion3 = agrupacion.GroupBy(x => x).Select(g => g.Key).ToList();
@@ -216,6 +231,42 @@ namespace Tesis_Algoritmo_Genetico
             /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
             Console.ReadKey();
         }
+
+        /*MIENTRAS ARRIBA*/
+
+        static int[] medir_convergencia(List<List<double>> poblacion)
+        {
+            int[] valida_pos = new int[poblacion.Count];
+            int[] repeticiones = new int[poblacion.Count];
+            
+            
+            for (int i = 0; i < poblacion.Count; i++)
+            {
+                if (valida_pos[i] == 0)
+                {
+                    valida_pos[i] = 1;
+                    int contador = 1;
+                    List<double> v1 = poblacion[i];
+                    for (int j = 0; j < poblacion.Count; j++)
+                    {
+                        if (valida_pos[j] == 0)
+                        {
+                            List<double> v2 = poblacion[j];
+                            if (v1.SequenceEqual(v2))
+                            {
+                                contador++;
+                                valida_pos[j] = 1;
+                                repeticiones[j] = -1;
+                            }
+                        }
+                    }
+                    repeticiones[i] = contador;
+                }
+            }
+            return repeticiones;
+        }
+
+        /*MIENTRAS ARRIBA*/
 
         static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
         {
@@ -479,7 +530,7 @@ namespace Tesis_Algoritmo_Genetico
             return ResultadosFX;
         }
 
-        static List<List<double>> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion, double inversion)
+        static List<List<double>> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion)
         {
             List<List<double>> padre = new List<List<double>>();
             List<double> padrefx = new List<double>();
