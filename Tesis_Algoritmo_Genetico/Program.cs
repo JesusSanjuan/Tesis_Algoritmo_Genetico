@@ -193,7 +193,7 @@ namespace Tesis_Algoritmo_Genetico
                 // poblacion2 = DesordenarLista(poblacion2);                
 
                 /*COMPROBAR CONVERGENCIA AUN NO ES CORRECTO*/
-                if (j == 20)
+                if (j == 40)
                 {
 
                 }
