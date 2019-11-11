@@ -156,16 +156,9 @@ namespace Tesis_Algoritmo_Genetico
             double porcentaje2 = (((double)100) / Int32.Parse(poblacionNumero));
             List<double> ResultadosFX2;
             Random random2b = new Random();
-
-
+            List<List<double>> resultadosxxx = new List<List<double>>();
             do
             {
-                if (porcentajeconvergencia2 >= 40 && porcentajeconvergencia2 <= 50)
-                {
-                    Console.WriteLine("\t****************************\n");
-                }
-
-
                 ResultadosFX2 = fxFNE(inversion, poblacion2, VS, Convert.ToDouble(resultTIR[0].Text), periodo);
 
                 List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
@@ -190,15 +183,18 @@ namespace Tesis_Algoritmo_Genetico
 
                 poblacion2.Clear();
                 poblacion2 = padre2.Concat(hijos_Generadosb).ToList();
-                // poblacion2 = DesordenarLista(poblacion2);                
+                poblacion2 = DesordenarLista(poblacion2);
 
                 /*COMPROBAR CONVERGENCIA AUN NO ES CORRECTO*/
-                if (j == 40)
+                if (j == 48)
                 {
 
                 }
-                int[] repeticiones=medir_convergencia(poblacion2);
-                var agrupacion = poblacion2.GroupBy(x => x).Select(g => g.Count()).ToList();
+                List<List<double>> poblacionanalisis = new List<List<double>>(poblacion2);
+                List<double> convergencia = medir_convergencia2(poblacionanalisis);
+                var agrupacion= convergencia.OrderByDescending(o => o).ToList();
+               
+
                 /*  var query = poblacion2.GroupBy(x => x)
                 .Where(g => g.Count() > 0)
                 .Select(y => new { Element = y.Key, Counter = y.Count() })
@@ -208,20 +204,21 @@ namespace Tesis_Algoritmo_Genetico
                 .ToDictionary(x => x.Key, y => y.Count());*/
 
 
-                agrupacion = agrupacion.OrderByDescending(o => o).ToList();
-                var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
-                var agrupacion3 = agrupacion.GroupBy(x => x).Select(g => g.Key).ToList();
-                var valormax = agrupacion3.Max();
+                /* var agrupacion = poblacion2.GroupBy(x => x).Select(g => g.Count()).ToList();
+                 agrupacion = agrupacion.OrderByDescending(o => o).ToList();
+                 var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+                 var agrupacion3 = agrupacion.GroupBy(x => x).Select(g => g.Key).ToList();
+                 var valormax = agrupacion3.Max();
 
-                foreach (var el in agrupacion2)
-                {
-                    if (el.Text == valormax && el.Count == 1)
-                    {
-                        double valor = Convert.ToDouble(el.Text);
-                        porcentajeconvergencia2 = porcentaje2 * valor;
-                    }
-                    break;
-                }
+                 foreach (var el in agrupacion2)
+                 {
+                     if (el.Text == valormax && el.Count == 1)
+                     {
+                         double valor = Convert.ToDouble(el.Text);
+                         porcentajeconvergencia2 = porcentaje2 * valor;
+                     }
+                     break;
+                 }*/
                 Console.WriteLine("\t****************************\n");
                 Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", j, porcentajeconvergencia2);
                 /*COMPROBAR CONVERGENCIA AUN NO ES CORRECTO*/
@@ -234,12 +231,40 @@ namespace Tesis_Algoritmo_Genetico
 
         /*MIENTRAS ARRIBA*/
 
-        static int[] medir_convergencia(List<List<double>> poblacion)
+
+
+     /*   public static List<List<double>> medir_convergencia(List<List<double>> poblacion2, int iteracion)
+        {   
+            List<List<double>> original = new List<List<double>>(poblacion2);
+            List<List<double>> poblacion = new List<List<double>>(poblacion2);
+            List<List<double>> resultadosFinales = new List<List<double>>();
+
+            do
+            {
+                List<double> v1 = poblacion[0];
+                List<double> temporal2 = new List<double>();
+                for (int j = 0; j < poblacion.Count; j++)
+                {
+                    List<double> v2 = poblacion[j];
+                    if (v1.SequenceEqual(v2))
+                    {
+                        temporal2.Add(v2[0]);
+                    }
+                }
+                poblacion.RemoveAll(item => item == v1);                
+                List<double> temporal = new List<double>();
+                temporal.Add(temporal2[0]);
+                temporal.Add(temporal2.Count);
+                resultadosFinales.Add(temporal);
+            } while (poblacion.Count != 0);
+            return resultadosFinales;
+        }*/
+
+        public static List<double> medir_convergencia2(List<List<double>> poblacion)
         {
             int[] valida_pos = new int[poblacion.Count];
-            int[] repeticiones = new int[poblacion.Count];
-            
-            
+            List<double> resultadosFinales = new List<double>();
+
             for (int i = 0; i < poblacion.Count; i++)
             {
                 if (valida_pos[i] == 0)
@@ -251,24 +276,23 @@ namespace Tesis_Algoritmo_Genetico
                     {
                         if (valida_pos[j] == 0)
                         {
-                            List<double> v2 = poblacion[j];
+                            List<double> v2 = poblacion[j];                            
                             if (v1.SequenceEqual(v2))
                             {
                                 contador++;
                                 valida_pos[j] = 1;
-                                repeticiones[j] = -1;
                             }
                         }
                     }
-                    repeticiones[i] = contador;
+                    resultadosFinales.Add(contador);
                 }
             }
-            return repeticiones;
+            return resultadosFinales;
         }
 
         /*MIENTRAS ARRIBA*/
 
-        static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
+        public static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
         {
             double resultado, sumasuperior = 0, sumainferior = 0;
             for (int i = 0; i < FNE.Length; i++)
