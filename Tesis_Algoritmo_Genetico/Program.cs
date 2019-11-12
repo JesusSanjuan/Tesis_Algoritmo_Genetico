@@ -36,12 +36,14 @@ namespace Tesis_Algoritmo_Genetico
             String poblacionNumero;
             poblacionNumero = Console.ReadLine();
 
-            Console.WriteLine("\n\nAproximacion inicial..");
+
+
+            Console.WriteLine("\nAproximacion inicial encontrada");
+            Console.WriteLine("\n\n******************INICIO DE LA BUSQUEDA DE LA TIR.*****************\n\n");           
 
             Stopwatch tiempo = Stopwatch.StartNew();
 
             double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
-            Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
 
             Random random = new Random();
             double minimo = aproxInicial - 1000;
@@ -106,29 +108,23 @@ namespace Tesis_Algoritmo_Genetico
                     }
                     break;
                 }
-                Console.WriteLine("\t****************************\n");
                 Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);
                 i = i + 1;
             } while (porcentajeconvergencia < (double)99.9);
             tiempo.Stop();
-
+            Console.WriteLine("\n******************CONCLUIDA LA BUSQUEDA DE LA TIR.*****************");
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
 
             var resultTMR = ResultadosFX.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTMR = resultTMR.OrderByDescending(o => o.Count).ToList();
-            Console.WriteLine("____________________________\n");
 
-            Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", resultTMR[0].Text);
-            Console.WriteLine("\n\t\t RESULTADO TIR: {0}", resultTIR[0].Text);
-            Console.WriteLine("\n\nEL ALGORITMO TERMINO LA BUSQUEDA\n\n");
 
-            Console.WriteLine($"Tiempo: {tiempo.Elapsed.TotalSeconds} segundos");
 
-            Console.WriteLine("\n\n_______________________________________\n\n");
-            Console.WriteLine("\n\n___________OPTIMIZANDO_FNE_____________\n\n");
-            Console.ReadKey();
-            /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
+            Console.WriteLine("\n\n******************INICIO DE OPTIMIZACION DE FNE.*******************\n\n");
+
+            /*Optimizacion de  FLUJOS NETOS DE EFECTIVO*/
+            Stopwatch tiempofne = Stopwatch.StartNew();
             List<double> FNEList = FNE.ToList();
             double FNEMax = FNEList.Max();
             double FNEMin = FNEList.Min();
@@ -196,21 +192,36 @@ namespace Tesis_Algoritmo_Genetico
                     }
                     break;
                 }               
-                Console.WriteLine("\t****************************\n");
                 Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", j, porcentajeconvergencia2);
                 j = j + 1;
             } while (porcentajeconvergencia2 < (double)99.9);
-
+            tiempofne.Stop();
+            Console.WriteLine("\n******************FINALIZACION DE OPTIMIZACION DE FNE.*******************\n\n");
             /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
 
             /*IMPRIMIENDO RESULTADOS FINALES*/
-            Console.WriteLine("\nAproximacion inicial es: {0}\n", aproxInicial);
+            Console.WriteLine("********RESULTADOS DE LA BUSQUEDA DE LA TIR*************");
+            Console.WriteLine("\tAproximacion inicial es: {0}\n", aproxInicial);
+            Console.WriteLine("\n\tTotal de Generaciones del calculo de la TIR: {0} , Convergencia del: {1}", i, porcentajeconvergencia);
+            Console.WriteLine("\n\t\t RESULTADO TMAR: {0}", resultTMR[0].Text);
+            Console.WriteLine("\n\t\t RESULTADO TIR: {0}", resultTIR[0].Text);  
+            Console.WriteLine($"\n\t\t\tTiempo para la busqueda de la TIR y TMAR: {tiempo.Elapsed.TotalSeconds} segundos");
+            Console.WriteLine("********RESULTADOS DE LA BUSQUEDA DE LA TIR*************");
+
+            Console.WriteLine("\n\n********RESULTADOS DE LA OPTIMIZACION DE LOS FNE************");
+            Console.WriteLine("\tTotal de Generaciones para la optimizacion de los FNE: {0} , Convergencia del: {1}\n", j, porcentajeconvergencia2);
+            Console.WriteLine("\n\t RESULTADOS DE LA OPTIMIZACION DE LOS FNE\n");
+            List<double> poblacionMuestra = new List<double>();
+            poblacionMuestra = poblacion2[0];
+            for (int x=0; x<poblacionMuestra.Count;x++)
+            {
+                Console.WriteLine("\n\t\t FNE Original {0}: {1}, FNE Opimizado {2}: {3}", x, poblacionMuestra[x],x, FNE[x]);
+            }
+            Console.WriteLine("\n\t\t\tRESULTADO TMAR: {0}", ResultadosFX2[0]);
+            Console.WriteLine("\n\t\t\tRESULTADO TIR: {0}", resultTIR[0].Text);
+            Console.WriteLine($"\n\t\t\tTiempo para la optimizacion de los FNE: {tiempofne.Elapsed.TotalSeconds} segundos");
+            Console.WriteLine("********RESULTADOS DE LA OPTIMIZACION DE LOS FNE********");
             /*IMPRIMIENDO RESULTADOS FINALES*/
-
-
-
-
-
             Console.ReadKey();
         }
 
