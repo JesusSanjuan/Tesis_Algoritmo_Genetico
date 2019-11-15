@@ -129,6 +129,12 @@ namespace Tesis_Algoritmo_Genetico
             double FNEMax = FNEList.Max();
             double FNEMin = FNEList.Min();
 
+            if (FNEMax == FNEMin)
+            {
+                FNEMax = FNEMax + 1000;
+                FNEMin = FNEMin - 1000;
+            }
+
             List<List<double>> poblacion2 = new List<List<double>>();
 
             while (poblacion2.Count < Int32.Parse(poblacionNumero))
