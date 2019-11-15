@@ -215,7 +215,7 @@ namespace Tesis_Algoritmo_Genetico
             poblacionMuestra = poblacion2[0];
             for (int x=0; x<poblacionMuestra.Count;x++)
             {
-                Console.WriteLine("\n\t\t FNE Original {0}: {1}, FNE Opimizado {2}: {3}", x, poblacionMuestra[x],x, FNE[x]);
+                Console.WriteLine("\n\t\t FNE Original {0}: {1}, FNE Opimizado {2}: {3}", x, FNE[x], x, poblacionMuestra[x]);
             }
             Console.WriteLine("\n\t\t\tRESULTADO TMAR: {0}", ResultadosFX2[0]);
             Console.WriteLine("\n\t\t\tRESULTADO TIR: {0}", resultTIR[0].Text);
