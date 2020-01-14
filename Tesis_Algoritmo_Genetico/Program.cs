@@ -13,14 +13,18 @@ namespace Tesis_Algoritmo_Genetico
         static void Main(string[] args)
         {
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
-            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t ¿Inversion\t\t\tValor de Salvamento");
+            StreamWriter outputFile2 = new StreamWriter("D:\\ArchivoFNE.txt");
+            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t Inversion\t\t\tValor de Salvamento");
+            outputFile2.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TMAR\t\t\t\t\tPeriodo");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
+            int poblacionNumero = 240;
             Random random = new Random();
             Random randNum = new Random();
             Random random2 = new Random();
             Random random3 = new Random();
+            Random random4 = new Random();
             Console.WriteLine("\nEjecutando pruebas\n");
             Stopwatch tiempoT = Stopwatch.StartNew();
             do {
@@ -47,10 +51,12 @@ namespace Tesis_Algoritmo_Genetico
                     FNE[num] = random3.NextDouble() * (maximo3 - minimo3) + minimo3; 
                 }
                 /**************************************************************************/
-                List<string> Resultados2 = genetico(inversion, FNE, VS, periodo);                
+                List<string> Resultados2 = genetico(inversion, FNE, VS, periodo,poblacionNumero);                
+                List<string> Resultados1 = geneticoFNE(inversion, FNE, VS, periodo, poblacionNumero, random4, Double.Parse(Resultados2[2]));
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
                 outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t " + Resultados2[5]  + " Generaciones\t\t\t$ " + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
-                
+                outputFile2.WriteLine("Prueba " + cont.ToString() + "\t\t\t\t" + Resultados1[0] + " Seg\t\t\t$" + Resultados1[1] + "\t\t\t" + periodo.ToString()+ "\t\t\t"+ Resultados1[2] + " iteraciones\n");
+
                 cont = cont + 1;
             }while(cont <= i);
             tiempoT.Stop();
@@ -60,19 +66,20 @@ namespace Tesis_Algoritmo_Genetico
             outputFile.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} SEGUNDOS  \n", tiemTotal);
             outputFile.WriteLine("\tCONCLUYERON TODAS LAS PRUEBAS EN {0} MINUTOS  \n", tiemTotal2);
             outputFile.Close();
+            outputFile2.Close();
             Thread.Sleep(1000);
             Console.WriteLine("\t ABRIENDO REPORTE\n");
             AbrirArchivo("D:\\Archivo.txt");
+            AbrirArchivo("D:\\ArchivoFNE.txt");
             Thread.Sleep(1000);
             Console.WriteLine("\t Cerrando\n");
             Thread.Sleep(1000);
         }
 
-        public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo)
+        public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo, int poblacionNumero)
         {
             Stopwatch tiempo2 = Stopwatch.StartNew();
             double aproxInicial = aproximacioninicial(inversion, FNE);
-            int poblacionNumero = 240;
 
             Random random = new Random();
             double minimo = aproxInicial - 1000;
@@ -161,6 +168,102 @@ namespace Tesis_Algoritmo_Genetico
             resultados.Add(i.ToString());
             return resultados;
         }
+
+        public static List<string> geneticoFNE(double inversion, double[] FNE, double VS, int periodo, int poblacionNumero, Random random, double TIR)
+        {
+            Stopwatch tiempofne = Stopwatch.StartNew();
+            List<double> FNEList = FNE.ToList();
+            double FNEMax = FNEList.Max();
+            double FNEMin = FNEList.Min();
+
+            double porcentajeFNEMax = FNEMax / 100;
+            double porcentajeFNEMin = FNEMin / 100;
+
+            FNEMax = FNEMax + (porcentajeFNEMax * 10);
+            FNEMin = FNEMin - (porcentajeFNEMin * 10);
+
+            List<List<double>> poblacion2 = new List<List<double>>();
+
+            while (poblacion2.Count < poblacionNumero)
+            {
+                List<double> poblaciontem = new List<double>();
+                while (poblaciontem.Count < Convert.ToInt32(periodo))
+                {
+                    double numeroAleatorio = random.NextDouble() * ((FNEMax + 1) - (FNEMin - 1)) + (FNEMin - 1);
+                    if (!poblaciontem.Contains(numeroAleatorio))
+                    {
+                        poblaciontem.Add(numeroAleatorio);
+                    }
+                }
+                poblacion2.Add(poblaciontem);
+            }
+
+            List<List<double>> poblacionGrafica2 = new List<List<double>>(poblacion2);
+
+            int j = 1;
+            double porcentajeconvergencia2 = 0;
+            double porcentaje2 = (((double)100) / poblacionNumero);
+            List<double> ResultadosFX2;
+            Random random2b = new Random();
+            do
+            {
+                ResultadosFX2 = fxFNE(inversion, poblacion2, VS, TIR, periodo);
+
+                List<int> torneo1b = posTorneo(0, poblacion2.Count / 2);
+                List<int> torneo2b = posTorneo(poblacion2.Count / 2, poblacion2.Count);
+                List<List<double>> padre2 = SeleccionFNE(torneo1b, torneo2b, ResultadosFX2, poblacion2, FNEMax);
+
+                List<int> cruce1b = posTorneo(0, padre2.Count / 2);
+                List<int> cruce2b = posTorneo(padre2.Count / 2, padre2.Count);
+
+                List<List<double>> hijos_Generadosb = new List<List<double>>();
+
+                double probCruzb = random2b.NextDouble();
+
+                if (probCruzb < 0.9)
+                {
+                    hijos_Generadosb = CruceTotal2(padre2, cruce1b, cruce2b, j);
+                }
+                else
+                {
+                    hijos_Generadosb = padre2;
+                }
+
+                poblacion2.Clear();
+                poblacion2 = padre2.Concat(hijos_Generadosb).ToList();
+                poblacion2 = DesordenarLista(poblacion2);
+                //List<List<double>> poblacionanalisis = new List<List<double>>(poblacion2); permite pasar en otra lista
+                List<double> convergencia = medir_convergencia2(poblacion2);
+                var agrupacion = convergencia.OrderByDescending(o => o).ToList();
+                var agrupacion2 = agrupacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
+                var valormax = agrupacion.Max();
+
+                foreach (var el in agrupacion2)
+                {
+                    if (el.Text == valormax && el.Count == 1)
+                    {
+                        double valor = Convert.ToDouble(el.Text);
+                        porcentajeconvergencia2 = porcentaje2 * valor;
+                    }
+                    break;
+                }
+
+                if (porcentajeconvergencia2 < (double)99.9)
+                {
+                    j = j + 1;
+                }
+
+            } while (porcentajeconvergencia2 < (double)99.9);
+            tiempofne.Stop();
+
+            String Ztiempo2 = tiempofne.Elapsed.TotalSeconds.ToString();
+            List<string> resultados = new List<string>();
+            resultados.Add(Ztiempo2);
+            resultados.Add(ResultadosFX2[0].ToString());
+            resultados.Add(j.ToString());
+            return resultados;
+        }
+
 
         public static double aproximacioninicial(double Inversion, double[] FNE)
         {
@@ -400,6 +503,176 @@ namespace Tesis_Algoritmo_Genetico
             fVPN = -Inversion + FNEAcumulado;
             return fVPN;
         }
+
+        /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
+        static List<double> fxFNE(double Inversion, List<List<double>> poblacion, double VS, double tir, int Periodo)
+        {
+            List<double> ResultadosFX = new List<double>();
+            double valorFX = 0;
+            foreach (List<double> contenido in poblacion)
+            {
+                double[] array = contenido.ToArray();
+                valorFX = CalcularVPN(Inversion, array, VS, tir / 100, Periodo);
+                ResultadosFX.Add(valorFX);
+            }
+            return ResultadosFX;
+        }
+        static List<List<double>> SeleccionFNE(List<int> p1, List<int> p2, List<double> ResultadosFX, List<List<double>> poblacion, double FNEMax)
+        {
+            List<List<double>> padre = new List<List<double>>();
+            List<double> padrefx = new List<double>();
+
+            for (int i = 0; i < p1.Count; i++)
+            {
+                double fx1 = ResultadosFX[p1[i]];
+                double fx2 = ResultadosFX[p2[i]];
+
+                List<double> pob1 = poblacion[p1[i]];
+                List<double> pob2 = poblacion[p2[i]];
+
+                List<double> tem = new List<double>();
+                tem.Add(fx1);
+                tem.Add(fx2);
+
+                double ganador = 0;
+
+                int indexganadorPob = 0;
+
+                ganador = tem.Max(x => x);
+
+                indexganadorPob = ResultadosFX.FindIndex(x => x == ganador);
+
+                List<double> pobganador = poblacion[indexganadorPob];
+
+                Boolean t1 = false;
+                for (int j = 0; j < pobganador.Count; j++)
+                {
+                    if (pobganador[j] <= (FNEMax + 100))
+                    {
+                        t1 = true;
+                    }
+                    else
+                    {
+                        t1 = false;
+                        break;
+                    }
+
+                }
+                if (t1)
+                {
+                    padrefx.Add(ganador);
+                    padre.Add(poblacion[indexganadorPob]);
+                }
+                else
+                {
+                    double perdedor = 0;
+                    int indexperdedorPob = 0;
+                    perdedor = tem.Min(x => x);
+                    indexperdedorPob = ResultadosFX.FindIndex(x => x == perdedor);
+                    padrefx.Add(perdedor);
+                    padre.Add(poblacion[indexperdedorPob]);
+                }
+            }
+            return padre;
+        }
+
+        static List<List<double>> CruceTotal2(List<List<double>> padre, List<int> cruce1, List<int> cruce2, int iteracion)
+        {
+            Random random = new Random();
+            List<List<double>> poblacionnueva1a = Cruce2(cruce1, cruce2, padre);
+            List<List<double>> poblacionnueva1 = mutacion2(poblacionnueva1a, iteracion, random);
+            cruce1 = DesordenarLista(cruce1);
+            cruce2 = DesordenarLista(cruce2);
+            List<List<double>> poblacionnueva2a = Cruce2(cruce1, cruce2, padre);
+            List<List<double>> poblacionnueva2 = mutacion2(poblacionnueva2a, iteracion, random);
+            return poblacionnueva1.Concat(poblacionnueva2).ToList();
+        }
+
+        static List<List<double>> Cruce2(List<int> cruce1, List<int> cruce2, List<List<double>> padre)
+        {
+            List<List<double>> hijos = new List<List<double>>();
+            for (int i = 0; i < cruce1.Count; i++)
+            {
+                List<double> padre1 = padre[cruce1[i]];
+                List<double> padre2 = padre[cruce2[i]];
+                List<double> crucemedias = new List<double>();
+
+                for (int j = 0; j < padre1.Count; j++)
+                {
+                    double media = (padre1[j] + padre2[j]) / 2;
+                    crucemedias.Add(media);
+                }
+                //double media = (padre1 + padre2) / 2;
+                //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
+                //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
+                hijos.Add(crucemedias);
+            }
+            return hijos;
+        }
+
+        static List<List<double>> mutacion2(List<List<double>> poblacion1, int iteracion, Random random)
+        {
+            List<List<double>> mutacionResultado = new List<List<double>>();
+            for (int i = 0; i < poblacion1.Count; i++)
+            {
+                List<double> poblaciontrabajo = poblacion1[i];
+
+                for (int j = 0; j < poblaciontrabajo.Count; j++)
+                {
+                    double longitud = Convert.ToString(poblaciontrabajo[j]).Length - 1;
+                    double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
+                    // double numeroAleatorio = random.NextDouble();
+
+                    // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
+                    if (p > .1)//AQUI PERMITE LA MUTACION lgo invertido
+                    {
+                        double mediageometrica = poblaciontrabajo.Sum() / poblaciontrabajo.Count;
+                        double desviasion = desviasionstandar(poblaciontrabajo, mediageometrica);
+                        double z = (poblaciontrabajo[j] - mediageometrica) / desviasion;
+                        poblaciontrabajo[j] = poblaciontrabajo[j] + z;
+                        //Console.WriteLine("\n\t\t\t\tMUTACION");
+                    }
+                    else
+                    {
+                        poblaciontrabajo[j] = poblaciontrabajo[j];
+                    }
+                }
+                mutacionResultado.Add(poblaciontrabajo);
+            }
+            return mutacionResultado;
+        }
+
+        public static List<double> medir_convergencia2(List<List<double>> poblacion)
+        {
+            int[] valida_pos = new int[poblacion.Count];
+            List<double> resultadosFinales = new List<double>();
+
+            for (int i = 0; i < poblacion.Count; i++)
+            {
+                if (valida_pos[i] == 0)
+                {
+                    valida_pos[i] = 1;
+                    int contador = 1;
+                    List<double> v1 = poblacion[i];
+                    for (int j = 0; j < poblacion.Count; j++)
+                    {
+                        if (valida_pos[j] == 0)
+                        {
+                            List<double> v2 = poblacion[j];
+                            if (v1.SequenceEqual(v2))
+                            {
+                                contador++;
+                                valida_pos[j] = 1;
+                            }
+                        }
+                    }
+                    resultadosFinales.Add(contador);
+                }
+            }
+            return resultadosFinales;
+        }
+        /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
+
 
         private static void AbrirArchivo(string Path)
         {
