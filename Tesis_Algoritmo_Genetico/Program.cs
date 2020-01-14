@@ -229,39 +229,7 @@ namespace Tesis_Algoritmo_Genetico
             Console.WriteLine("********RESULTADOS DE LA OPTIMIZACION DE LOS FNE********");
             /*IMPRIMIENDO RESULTADOS FINALES*/
             Console.ReadKey();
-        }
-
-        /*MIENTRAS ARRIBA*/
-        public static List<double> medir_convergencia2(List<List<double>> poblacion)
-        {
-            int[] valida_pos = new int[poblacion.Count];
-            List<double> resultadosFinales = new List<double>();
-
-            for (int i = 0; i < poblacion.Count; i++)
-            {
-                if (valida_pos[i] == 0)
-                {
-                    valida_pos[i] = 1;
-                    int contador = 1;
-                    List<double> v1 = poblacion[i];
-                    for (int j = 0; j < poblacion.Count; j++)
-                    {
-                        if (valida_pos[j] == 0)
-                        {
-                            List<double> v2 = poblacion[j];                            
-                            if (v1.SequenceEqual(v2))
-                            {
-                                contador++;
-                                valida_pos[j] = 1;
-                            }
-                        }
-                    }
-                    resultadosFinales.Add(contador);
-                }
-            }
-            return resultadosFinales;
-        }
-        /*MIENTRAS ARRIBA*/
+        }       
 
         public static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
         {
@@ -649,6 +617,36 @@ namespace Tesis_Algoritmo_Genetico
             }
             return mutacionResultado;
         }
+        public static List<double> medir_convergencia2(List<List<double>> poblacion)
+        {
+            int[] valida_pos = new int[poblacion.Count];
+            List<double> resultadosFinales = new List<double>();
+
+            for (int i = 0; i < poblacion.Count; i++)
+            {
+                if (valida_pos[i] == 0)
+                {
+                    valida_pos[i] = 1;
+                    int contador = 1;
+                    List<double> v1 = poblacion[i];
+                    for (int j = 0; j < poblacion.Count; j++)
+                    {
+                        if (valida_pos[j] == 0)
+                        {
+                            List<double> v2 = poblacion[j];
+                            if (v1.SequenceEqual(v2))
+                            {
+                                contador++;
+                                valida_pos[j] = 1;
+                            }
+                        }
+                    }
+                    resultadosFinales.Add(contador);
+                }
+            }
+            return resultadosFinales;
+        }
+
         /*Optimiazacion de  FLUJOS NETOS DE EFECTIVO*/
     }
 }
