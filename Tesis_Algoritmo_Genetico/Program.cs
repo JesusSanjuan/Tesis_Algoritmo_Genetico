@@ -71,12 +71,12 @@ namespace Tesis_Algoritmo_Genetico
         public static List<string> genetico(double inversion, double[] FNE, double VS, int periodo)
         {
             Stopwatch tiempo2 = Stopwatch.StartNew();
-            double aproxInicial = aproximacioninicial(inversion, FNE, periodo);
+            double aproxInicial = aproximacioninicial(inversion, FNE);
             int poblacionNumero = 240;
 
             Random random = new Random();
-            double minimo = aproxInicial - 2500;
-            double maximo = aproxInicial + 2500;
+            double minimo = aproxInicial - 1000;
+            double maximo = aproxInicial + 1000;
 
             List<double> poblacion = new List<double>();
 
@@ -112,35 +112,16 @@ namespace Tesis_Algoritmo_Genetico
 
                 if (probCruz < 0.9)
                 {
-                    /*double m = random.NextDouble();
-                    int aleatorio = random.Next(0, 1);
-                    double pprima = Math.Pow(1 + ((1 - m) / m) * Math.Exp(-(0.22) * aleatorio), -1);*/
                     hijos_Generados = CruceTotal(padre, cruce1, cruce2,i);
                 }
                 else
-                {
-                    /* if (c1 != c2)LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     {                        
-                         padre.RemoveAt(random.Next(0, padre.Count));
-                         hijos_Generados = padre;LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     }
-                     elseLO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                     {*/
+                {                    
                     hijos_Generados = padre;
-                    //}LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
                 }
 
                 poblacion.Clear();
                 poblacion = padre.Concat(hijos_Generados).ToList();
                 poblacion= DesordenarLista(poblacion);
-
-                /*if (c1 != c2)///LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                {
-                    int numeroAleatorio = new Random().Next(0, padre.Count / 2);
-                    int numeroAleatorio2 = new Random().Next(padre.Count / 2, padre.Count);
-                    List<double> hijoimpar = CruceImpar(padre[numeroAleatorio], padre[numeroAleatorio2]);
-                    poblacion = poblacion.Concat(hijoimpar).ToList();LO COMENTADO ES PARA MANEJAR POBLACIONES IMPARES
-                }*/
 
                 var agrupacion = poblacion.GroupBy(x => x).Select(g => g.Count()).ToList();
                 agrupacion = agrupacion.OrderByDescending(o => o).ToList();
@@ -154,14 +135,16 @@ namespace Tesis_Algoritmo_Genetico
                     {
                         double valor = Convert.ToDouble(el.Text);
                         porcentajeconvergencia = porcentaje * valor;
-                        //Console.WriteLine("\t****************************\n");
-                        //Console.WriteLine("\tGeneracion: {0} , Convergencia del: {1}\n", i, porcentajeconvergencia);                       
                     }
                     break;
                 }
-                i = i + 1;
+                if (porcentajeconvergencia < (double)99.9)
+                {
+                    i = i + 1;
+                }
             } while (porcentajeconvergencia <(double)99.9);
             tiempo2.Stop();
+
             var resultTIR = poblacion.GroupBy(x => x).Select(g => new { Text = g.Key, Count = g.Count() }).ToList();
             resultTIR = resultTIR.OrderByDescending(o => o.Count).ToList();
 
@@ -178,8 +161,8 @@ namespace Tesis_Algoritmo_Genetico
             resultados.Add(i.ToString());
             return resultados;
         }
-       
-        static double aproximacioninicial(double Inversion, double[] FNE, int Periodo)
+
+        public static double aproximacioninicial(double Inversion, double[] FNE)
         {
             double resultado, sumasuperior = 0, sumainferior = 0;
             for (int i = 0; i < FNE.Length; i++)
@@ -194,7 +177,7 @@ namespace Tesis_Algoritmo_Genetico
             double t1 = sumainferior / Inversion;
             t1 = Math.Abs(t1);
             double t2 = 1 / resultado;
-            x0 = Math.Pow(t1,t2);
+            x0 = Math.Pow(t1, t2);
             x0 = (x0 - 1) * 100;
             return x0;
         }
@@ -205,7 +188,7 @@ namespace Tesis_Algoritmo_Genetico
             double valorFX = 0;
             foreach (double contenido in poblacion)
             {
-                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);               
+                valorFX = CalcularVPN(Inversion, FNE, VS, contenido / 100, Periodo);
                 ResultadosFX.Add(valorFX);
             }
             return ResultadosFX;
@@ -329,20 +312,18 @@ namespace Tesis_Algoritmo_Genetico
 
         static List<double> CruceTotal(List<double> padre, List<int> cruce1, List<int> cruce2, int iteracion)
         {
-            Random random = new Random();
             List<double> poblacionnueva1a = Cruce(cruce1, cruce2, padre);
-            List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion, random);
+            List<double> poblacionnueva1 = mutacion(poblacionnueva1a, iteracion);
             cruce1 = DesordenarLista(cruce1);
             cruce2 = DesordenarLista(cruce2);
             List<double> poblacionnueva2a = Cruce(cruce1, cruce2, padre);
-            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion, random);
+            List<double> poblacionnueva2 = mutacion(poblacionnueva2a, iteracion);
             return poblacionnueva1.Concat(poblacionnueva2).ToList();
         }
 
         static List<double> Cruce(List<int> cruce1, List<int> cruce2, List<double> padre)
         {
             List<double> hijos = new List<double>();
-            Random random = new Random();
             for (int i = 0; i < cruce1.Count; i++)
             {
                 double padre1 = padre[cruce1[i]];
@@ -351,27 +332,24 @@ namespace Tesis_Algoritmo_Genetico
                 double media = (padre1 + padre2) / 2;
                 //double media_geometrica = (double)Math.Sqrt((Math.Pow((double)padre1,2) * (Math.Pow((double)padre2,2))));
                 //double media_geometrica = (double)Math.Sqrt((double)(padre1*padre2));
-                //media = mutacion(media, pprima, random);
                 hijos.Add(media);
             }
             return hijos;
         }
 
-        static List<double> mutacion(List<double> poblacion1, int iteracion, Random random)
+        static List<double> mutacion(List<double> poblacion1, int iteracion)
         {
+            double p = 0;
             for (int i = 0; i < poblacion1.Count; i++)
             {
-                // double numeroAleatorio = random.NextDouble();
                 double longitud = Convert.ToString(poblacion1[i]).Length - 1;
-                double p = Math.Pow(2 + (((longitud - 2) / (70 - 1)) * iteracion), -1);
-                // Console.WriteLine("\n\t\t\t\t\tMUTACION {0}", numeroAleatorio);
+                p = Math.Pow(2 + (((longitud - 2) / (80 - 1)) * iteracion), -1);
                 if (p > .1)//AQUI PERMITE LA MUTACION lgo invertido
                 {
                     double mediageometrica = poblacion1.Sum() / poblacion1.Count;
                     double desviasion = desviasionstandar(poblacion1, mediageometrica);
                     double z = (poblacion1[i] - mediageometrica) / desviasion;
                     poblacion1[i] = poblacion1[i] + z;
-                    //Console.WriteLine("\n\t\t\t\tMUTACION");
                 }
                 else
                 {
@@ -391,14 +369,6 @@ namespace Tesis_Algoritmo_Genetico
             return Math.Sqrt(sumatoria / (poblacion1.Count - 1));
         }
 
-        static List<double> CruceImpar(double padre1, double padre2)
-        {
-            List<double> hijos = new List<double>();
-            double media = (padre1 + padre2) / 2;
-            hijos.Add(media);
-            return hijos;
-        }
-
         public static double CalcularVPN(double Inversion, double[] FNE, double VS, double TMAR, int Periodo)
         {
             double FNEAcumulado = 0, fVPN = 0;
@@ -414,7 +384,7 @@ namespace Tesis_Algoritmo_Genetico
                 if (valorinferior == 0 && DivTMAR < 0)
                 {
                     valorinferior = Double.MinValue;
-                }                
+                }
                 FNEAcumulado = FNEAcumulado + (FNE[i - 1] / valorinferior);
             }
             double valorinferiorF = Math.Pow(DivTMAR, i);
@@ -427,9 +397,9 @@ namespace Tesis_Algoritmo_Genetico
                 valorinferiorF = Double.MinValue;
             }
             FNEAcumulado = FNEAcumulado + ((FNE[i - 1] + VS) / valorinferiorF);
-            fVPN = FNEAcumulado - Inversion;
+            fVPN = -Inversion + FNEAcumulado;
             return fVPN;
-        }  
+        }
 
         private static void AbrirArchivo(string Path)
         {
