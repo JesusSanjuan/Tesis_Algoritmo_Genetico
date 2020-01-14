@@ -14,7 +14,7 @@ namespace Tesis_Algoritmo_Genetico
         {
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
             StreamWriter outputFile2 = new StreamWriter("D:\\ArchivoFNE.txt");
-            outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t Inversion\t\t\tValor de Salvamento");
+            outputFile.WriteLine("Num Prueba\tTiempo algoritmo Genetico\t\tAG TIR\t\t\tAG Aprox Inicial\tPorcentaje Convergencia\t\tPrecision a 0\t\t\tPeriodo\t\t\tGeneraciones del AG\t\t Inversion\t\t\tValor de Salvamento");
             outputFile2.WriteLine("Num Prueba\tTiempo algoritmo Genetico\tConvergencia\t\titeraciones\t\tPeriodo\t\tInversion\t\t\tAG TMAR");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
@@ -54,7 +54,7 @@ namespace Tesis_Algoritmo_Genetico
                 List<string> Resultados2 = genetico(inversion, FNE, VS, periodo,poblacionNumero);                
                 List<string> Resultados1 = geneticoFNE(inversion, FNE, VS, periodo, poblacionNumero, random4, Double.Parse(Resultados2[2]));
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
-                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t " + Resultados2[5]  + " Generaciones\t\t\t$ " + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
+                outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t" + Resultados2[0] + " Seg\t\t" + Resultados2[1]+" %\t\t" + Resultados2[2] + "%\t\t" + Resultados2[3] + " %\t\t\t" + Resultados2[4]+ " fx\t\t\t" + periodo.ToString() + " meses\t\t " + Resultados2[5]  + " Generaciones\t\t\t$ " + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
                 outputFile2.WriteLine("Prueba " + cont.ToString() + "\t" + Resultados1[0] + " Seg\t\t\t" + Resultados1[1] + "%\t\t\t" + Resultados1[2] + " iteraciones\t\t" + Resultados1[3] + " periodos \t$"+ Resultados1[4]+ "\t\t$" + Resultados1[5] + "\n");
 
                 cont = cont + 1;
