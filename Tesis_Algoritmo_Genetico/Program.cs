@@ -15,7 +15,7 @@ namespace Tesis_Algoritmo_Genetico
             StreamWriter outputFile = new StreamWriter("D:\\Archivo.txt");
             StreamWriter outputFile2 = new StreamWriter("D:\\ArchivoFNE.txt");
             outputFile.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TIR\t\t\t\t\tAG Aprox Inicial\t\tPorcentaje Convergencia\t\tPrecision a 0\t\t\t\t\t\tPeriodo\t\t\t\tGeneraciones del AG\t\t\t\t Inversion\t\t\tValor de Salvamento");
-            outputFile2.WriteLine("Num Prueba\t\t\tTiempo algoritmo Genetico\t\tAG TMAR\t\t\t\t\tPeriodo");
+            outputFile2.WriteLine("Num Prueba\tTiempo algoritmo Genetico\tConvergencia\t\titeraciones\t\tPeriodo\t\tInversion\t\t\tAG TMAR");
             Console.WriteLine("Introduza la cantidad de pruebas a realizar:  ");
             int i = Convert.ToInt32(Console.ReadLine());
             int cont = 1;
@@ -55,7 +55,7 @@ namespace Tesis_Algoritmo_Genetico
                 List<string> Resultados1 = geneticoFNE(inversion, FNE, VS, periodo, poblacionNumero, random4, Double.Parse(Resultados2[2]));
                 Console.WriteLine("Fin de la prueba {0} de {1}, con el algoritmo genetico\n",cont,i);                
                 outputFile.WriteLine("Prueba "+cont.ToString()+"\t\t\t\t" + Resultados2[0] + " Seg\t\t\t" + Resultados2[1]+" %\t\t\t" + Resultados2[2] + "%\t\t\t" + Resultados2[3] + " %\t\t\t\t\t" + Resultados2[4]+ " fx\t\t\t\t\t" + periodo.ToString() + " meses\t\t\t " + Resultados2[5]  + " Generaciones\t\t\t$ " + inversion.ToString() + "\t\t" + VS.ToString()+ " vs\n");
-                outputFile2.WriteLine("Prueba " + cont.ToString() + "\t\t\t\t" + Resultados1[0] + " Seg\t\t\t$" + Resultados1[1] + "\t\t\t" + periodo.ToString()+ "\t\t\t"+ Resultados1[2] + " iteraciones\n");
+                outputFile2.WriteLine("Prueba " + cont.ToString() + "\t" + Resultados1[0] + " Seg\t\t\t" + Resultados1[1] + "%\t\t\t" + Resultados1[2] + " iteraciones\t\t" + Resultados1[3] + " periodos \t$"+ Resultados1[4]+ "\t\t$" + Resultados1[5] + "\n");
 
                 cont = cont + 1;
             }while(cont <= i);
@@ -259,8 +259,12 @@ namespace Tesis_Algoritmo_Genetico
             String Ztiempo2 = tiempofne.Elapsed.TotalSeconds.ToString();
             List<string> resultados = new List<string>();
             resultados.Add(Ztiempo2);
-            resultados.Add(ResultadosFX2[0].ToString());
+            resultados.Add(porcentajeconvergencia2.ToString());
             resultados.Add(j.ToString());
+            resultados.Add(periodo.ToString());
+            resultados.Add(inversion.ToString());
+            resultados.Add(ResultadosFX2[0].ToString());
+            
             return resultados;
         }
 
